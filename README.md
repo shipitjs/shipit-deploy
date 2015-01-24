@@ -20,6 +20,8 @@ npm install shipit-deploy
 
 ## Usage
 
+### Example `shipitfile.js`
+
 ```js
 module.exports = function (shipit) {
   require('shipit-deploy')(shipit);
