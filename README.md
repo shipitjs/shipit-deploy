@@ -114,7 +114,7 @@ You can manipulate the repository using git command, the API is describe in [gif
 
 Attached during `deploy:update` and `rollback:init` task.
 
-The current release dirname of the project, the format used is "yyyymmddHHMMss" (grunt.template.date format).
+The current release dirname of the project, the format used is "YYYYMMDDHHmmss" (moment format).
 
 ### shipit.releasesPath
 
