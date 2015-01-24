@@ -21,23 +21,24 @@ npm install shipit-deploy
 ## Usage
 
 ```js
-var shipit = require('shipit');
-require('shipit-deploy')(shipit);
+module.exports = function (shipit) {
+  require('shipit-deploy')(shipit);
 
-shipit.initConfig({
-  default: {
-    workspace: '/tmp/github-monitor',
-    deployTo: '/tmp/deploy_to',
-    repositoryUrl: 'https://github.com/user/repo.git',
-    ignores: ['.git', 'node_modules'],
-    keepReleases: 2,
-    key: '/path/to/key',
-    shallowClone: true
-  },
-  staging: {
-    servers: 'user@myserver.com'
-  }
-});
+  shipit.initConfig({
+    default: {
+      workspace: '/tmp/github-monitor',
+      deployTo: '/tmp/deploy_to',
+      repositoryUrl: 'https://github.com/user/repo.git',
+      ignores: ['.git', 'node_modules'],
+      keepReleases: 2,
+      key: '/path/to/key',
+      shallowClone: true
+    },
+    staging: {
+      servers: 'user@myserver.com'
+    }
+  });
+};
 ```
 
 To deploy on staging, you must use the following command :
