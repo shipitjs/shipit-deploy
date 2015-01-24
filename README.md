@@ -1,9 +1,9 @@
-# shipit-deploy-task
-[![Build Status](https://travis-ci.org/shipitjs/shipit-deploy-task.svg?branch=master)](https://travis-ci.org/shipitjs/shipit-deploy-task)
-[![Dependency Status](https://david-dm.org/shipitjs/shipit-deploy-task.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy-task)
-[![devDependency Status](https://david-dm.org/shipitjs/shipit-deploy-task/dev-status.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy-task#info=devDependencies)
+# shipit-deploy
+[![Build Status](https://travis-ci.org/shipitjs/shipit-deploy.svg?branch=master)](https://travis-ci.org/shipitjs/shipit-deploy)
+[![Dependency Status](https://david-dm.org/shipitjs/shipit-deploy.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy)
+[![devDependency Status](https://david-dm.org/shipitjs/shipit-deploy/dev-status.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy#info=devDependencies)
 
-Set of deployment tasks for Shipit based on git and scp commands.
+Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based on git and scp commands.
 
 **Features:**
 
@@ -15,14 +15,14 @@ Set of deployment tasks for Shipit based on git and scp commands.
 ## Install
 
 ```
-npm install shipit-deploy-task
+npm install shipit-deploy
 ```
 
 ## Usage
 
 ```js
 var shipit = require('shipit');
-require('shipit-deploy-task')(shipit);
+require('shipit-deploy')(shipit);
 
 shipit.initConfig({
   default: {
