@@ -1,7 +1,7 @@
 {
   "name": "shipit-deploy-task",
   "version": "0.0.0",
-  "description": "Git + SCP deploy task for Shipit.",
+  "description": "Set of deployment tasks for Shipit based on git and scp commands. ",
   "main": "index.js",
   "directories": {
     "test": "test"
