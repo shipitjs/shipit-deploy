@@ -1,7 +1,5 @@
-/**
- * Module dependencies.
- */
-
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
@@ -13,10 +11,12 @@ var Promise = require('bluebird');
  * - Checkout commit-ish.
  */
 
-module.exports = function (shipit) {
-  shipit.blTask('deploy:fetch', task);
+module.exports = function (gruntOrShipit) {
+  registerTask(gruntOrShipit, 'deploy:fetch', task);
 
   function task() {
+    var shipit = getShipit(gruntOrShipit);
+
     return createWorkspace()
     .then(initRepository)
     .then(addRemote)

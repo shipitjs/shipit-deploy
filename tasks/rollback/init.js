@@ -1,7 +1,5 @@
-/**
- * Module dependencies.
- */
-
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var _ = require('lodash');
 
@@ -11,10 +9,12 @@ var _ = require('lodash');
  * - Remote copy project.
  */
 
-module.exports = function (shipit) {
-  shipit.blTask('rollback:init', task);
+module.exports = function (gruntOrShipit) {
+  registerTask(gruntOrShipit, 'rollback:init', task);
 
   function task() {
+    var shipit = getShipit(gruntOrShipit);
+
     return defineReleasePath()
     .then(function () {
       shipit.emit('rollback');

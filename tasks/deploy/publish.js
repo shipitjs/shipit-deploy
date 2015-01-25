@@ -1,7 +1,5 @@
-/**
- * Module dependencies.
- */
-
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var chalk = require('chalk');
 var path = require('path2/posix');
 
@@ -10,10 +8,12 @@ var path = require('path2/posix');
  * - Update synonym link.
  */
 
-module.exports = function (shipit) {
-  shipit.blTask('deploy:publish', task);
+module.exports = function (gruntOrShipit) {
+  registerTask(gruntOrShipit, 'deploy:publish', task);
 
   function task() {
+    var shipit = getShipit(gruntOrShipit);
+
     return updateSynonymLink()
     .then(function () {
       shipit.emit('published');

@@ -1,7 +1,5 @@
-/**
- * Module dependencies.
- */
-
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
@@ -12,10 +10,12 @@ var chalk = require('chalk');
  * - Remote copy project.
  */
 
-module.exports = function (shipit) {
-  shipit.blTask('deploy:update', task);
+module.exports = function (gruntOrShipit) {
+  registerTask(gruntOrShipit, 'deploy:update', task);
 
   function task() {
+    var shipit = getShipit(gruntOrShipit);
+
     return createReleasePath()
     .then(remoteCopy)
     .then(function () {

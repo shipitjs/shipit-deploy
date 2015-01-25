@@ -1,12 +1,17 @@
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
+
 /**
  * Clean task.
  * - Remove old releases.
  */
 
-module.exports = function (shipit) {
-  shipit.blTask('deploy:clean', task);
+module.exports = function (gruntOrShipit) {
+  registerTask(gruntOrShipit, 'deploy:clean', task);
 
   function task() {
+    var shipit = getShipit(gruntOrShipit);
+
     return cleanOldReleases()
     .then(function () {
       shipit.emit('cleaned');
