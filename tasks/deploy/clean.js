@@ -4,9 +4,6 @@
  */
 
 module.exports = function (shipit) {
-  // shipit.task('base:deploy:clean', task);
-  // shipit.task('deploy:clean', ['deploy:publish'], task);
-  // shipit.task('rollback:clean', ['rollback:publish'], task);
   shipit.blTask('deploy:clean', task);
 
   function task() {

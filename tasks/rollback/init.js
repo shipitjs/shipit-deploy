@@ -12,8 +12,6 @@ var _ = require('lodash');
  */
 
 module.exports = function (shipit) {
-  // shipit.task('base:rollback:init', task);
-  // shipit.task('rollback:init', task);
   shipit.blTask('rollback:init', task);
 
   function task() {

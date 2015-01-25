@@ -11,9 +11,6 @@ var path = require('path2/posix');
  */
 
 module.exports = function (shipit) {
-  // shipit.task('base:deploy:publish', task);
-  // shipit.task('deploy:publish', ['deploy:update'], task);
-  // shipit.task('rollback:publish', ['rollback:init'], task);
   shipit.blTask('deploy:publish', task);
 
   function task() {

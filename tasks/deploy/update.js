@@ -13,8 +13,6 @@ var chalk = require('chalk');
  */
 
 module.exports = function (shipit) {
-  // shipit.task('base:deploy:update', task);
-  // shipit.task('deploy:update', ['deploy:fetch'], task);
   shipit.blTask('deploy:update', task);
 
   function task() {

@@ -14,8 +14,6 @@ var Promise = require('bluebird');
  */
 
 module.exports = function (shipit) {
-  // shipit.task('base:deploy:fetch', task);
-  // shipit.task('deploy:fetch', ['deploy:init'], task);
   shipit.blTask('deploy:fetch', task);
 
   function task() {
