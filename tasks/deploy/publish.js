@@ -5,7 +5,7 @@ var path = require('path2/posix');
 
 /**
  * Publish task.
- * - Update synonym link.
+ * - Update symbolic link.
  */
 
 module.exports = function (gruntOrShipit) {
@@ -14,16 +14,16 @@ module.exports = function (gruntOrShipit) {
   function task() {
     var shipit = getShipit(gruntOrShipit);
 
-    return updateSynonymLink()
+    return updateSymbolicLink()
     .then(function () {
       shipit.emit('published');
     });
 
     /**
-     * Update synonym link.
+     * Update symbolic link.
      */
 
-    function updateSynonymLink() {
+    function updateSymbolicLink() {
       shipit.log('Publishing release "%s"', shipit.releasePath);
 
       shipit.currentPath = path.join(shipit.config.deployTo, 'current');

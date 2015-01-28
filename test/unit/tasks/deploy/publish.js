@@ -32,7 +32,7 @@ describe('deploy:publish task', function () {
     shipit.remote.restore();
   });
 
-  it('should update the synonym link', function (done) {
+  it('should update the symbolic link', function (done) {
     shipit.start('deploy:publish', function (err) {
       if (err) return done(err);
       expect(shipit.currentPath).to.equal('/remote/deploy/current');
