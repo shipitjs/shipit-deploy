@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 
 /**
  * Init task.
@@ -7,10 +6,10 @@ var getShipit = require('../../lib/get-shipit');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'deploy:init', task);
+  utils.registerTask(gruntOrShipit, 'deploy:init', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = utils.getShipit(gruntOrShipit);
     shipit.emit('deploy');
   }
 };
