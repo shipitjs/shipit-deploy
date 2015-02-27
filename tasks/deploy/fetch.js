@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
@@ -12,10 +11,10 @@ var Promise = require('bluebird');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'deploy:fetch', task);
+  utils.registerTask(gruntOrShipit, 'deploy:fetch', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = utils.getShipit(gruntOrShipit);
 
     return createWorkspace()
     .then(initRepository)

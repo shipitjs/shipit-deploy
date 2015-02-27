@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 var path = require('path2/posix');
 var _ = require('lodash');
 
@@ -10,10 +9,10 @@ var _ = require('lodash');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'rollback:init', task);
+  utils.registerTask(gruntOrShipit, 'rollback:init', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = utils.getShipit(gruntOrShipit);
 
     return defineReleasePath()
     .then(function () {
@@ -69,7 +68,7 @@ module.exports = function (gruntOrShipit) {
         .then(function (results) {
           var releaseDirnames = results.map(computeReleaseDirname);
 
-          if (!equalValues(releaseDirnames))
+          if (!utils.equalValues(releaseDirnames))
             throw new Error('Remote server are not synced.');
 
           return releaseDirnames[0];
@@ -102,7 +101,7 @@ module.exports = function (gruntOrShipit) {
         .then(function (results) {
           var releases = results.map(computeReleases);
 
-          if (!equalValues(releases))
+          if (!utils.equalValues(releases))
             throw new Error('Remote server are not synced.');
 
           return releases[0];
@@ -124,19 +123,6 @@ module.exports = function (gruntOrShipit) {
 
         // Convert releases to an array.
         return dirs.split('\n');
-      }
-
-      /**
-       * Test if all values are equal.
-       *
-       * @param {*[]} values
-       * @returns {boolean}
-       */
-
-      function equalValues(values) {
-        return values.every(function (value) {
-          return _.isEqual(value, values[0]);
-        });
       }
     }
   }

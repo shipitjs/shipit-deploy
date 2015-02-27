@@ -1,4 +1,4 @@
-var registerTask = require('../../lib/register-task');
+var utils = require('shipit-utils');
 
 /**
  * Deploy task.
@@ -15,7 +15,7 @@ module.exports = function (gruntOrShipit) {
   require('./publish')(gruntOrShipit);
   require('./clean')(gruntOrShipit);
 
-  registerTask(gruntOrShipit, 'deploy', [
+  utils.registerTask(gruntOrShipit, 'deploy', [
     'deploy:init',
     'deploy:fetch',
     'deploy:update',
