@@ -3,6 +3,7 @@ var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
+var util = require('util');
 
 /**
  * Update task.
@@ -32,8 +33,23 @@ module.exports = function (gruntOrShipit) {
       shipit.releasePath = path.join(shipit.releasesPath, shipit.releaseDirname);
 
       shipit.log('Create release path "%s"', shipit.releasePath);
-      return shipit.remote('mkdir -p ' + shipit.releasePath)
-      .then(function () {
+      function mkdir() {
+        return shipit.remote('mkdir -p ' + shipit.releasePath);
+      }
+
+      var returnedPromise;
+      if (shipit.config.copyReleaseBeforeUpdate) {
+        returnedPromise = shipit.remote(util.format('set -o pipefail && ' +
+        'ls -rd %s/*|head -n 1 | xargs -I folder cp -R folder %s', shipit.releasesPath, shipit.releasePath))
+            .then(function () {
+              shipit.log('Release copied from previous release');
+            }).catch(function () {
+              return mkdir();
+            });
+      } else
+        returnedPromise = mkdir();
+
+      return returnedPromise.then(function () {
         shipit.log(chalk.green('Release path created.'));
       });
     }
@@ -46,9 +62,9 @@ module.exports = function (gruntOrShipit) {
       shipit.log('Copy project to remote servers.');
 
       return shipit.remoteCopy(shipit.config.workspace + '/', shipit.releasePath)
-      .then(function () {
-        shipit.log(chalk.green('Finished copy.'));
-      });
+          .then(function () {
+            shipit.log(chalk.green('Finished copy.'));
+          });
     }
   }
 };
