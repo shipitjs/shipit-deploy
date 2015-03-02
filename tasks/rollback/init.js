@@ -13,7 +13,9 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 'rollback:init', task);
 
   function task() {
-    var shipit = require('../../lib/releases')(getShipit(gruntOrShipit));
+    var shipit = getShipit(gruntOrShipit);
+    _.assign(shipit.constructor.prototype, require('../../lib/releases'));
+
     return defineReleasePath()
     .then(function () {
       shipit.emit('rollback');

@@ -3,6 +3,7 @@ var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
+var _ = require('lodash');
 
 /**
  * Update task.
@@ -14,7 +15,8 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 'deploy:update', task);
 
   function task() {
-    var shipit = require('../../lib/releases')(getShipit(gruntOrShipit));
+    var shipit = getShipit(gruntOrShipit);
+    _.assign(shipit.constructor.prototype, require('../../lib/releases'));
 
     return setPreviousRevision()
     .then(createReleasePath)
