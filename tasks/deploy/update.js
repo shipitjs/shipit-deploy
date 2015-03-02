@@ -14,9 +14,11 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 'deploy:update', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = require('../../lib/releases')(getShipit(gruntOrShipit));
 
-    return createReleasePath()
+    return setPreviousRevision()
+    .then(createReleasePath)
+    .then(setCurrentRevision)
     .then(remoteCopy)
     .then(function () {
       shipit.emit('updated');
@@ -48,6 +50,31 @@ module.exports = function (gruntOrShipit) {
       return shipit.remoteCopy(shipit.config.workspace + '/', shipit.releasePath)
       .then(function () {
         shipit.log(chalk.green('Finished copy.'));
+      });
+    }
+
+    function setPreviousRevision() {
+      return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
+        if (previousReleaseDir) {
+          var file = path.join(shipit.releasesPath, previousReleaseDir, 'REVISION');
+          return shipit.remote('if [ -f ' + file + ' ]; then cat ' + file + ' 2>/dev/null; fi;').then(function(response) {
+
+            // TODO: How should we handle multiple?
+            var rev = response[0].stdout.trim();
+            shipit.previousRevision = rev || false;
+          });
+        }
+      });
+    }
+
+    function setCurrentRevision() {
+      shipit.log('Setting current revision and creating revision file.');
+
+      return shipit.local('git rev-parse ' + shipit.config.branch).then(function(response) {
+        shipit.currentRevision = response.stdout.trim();
+        return shipit.remote('echo "' + shipit.currentRevision + '" > ' + path.join(shipit.releasePath, 'REVISION'));
+      }).then(function() {
+        shipit.log(chalk.green('Revision file created.'));
       });
     }
   }
