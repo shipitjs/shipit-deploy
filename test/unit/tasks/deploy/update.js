@@ -4,6 +4,7 @@ var moment = require('moment');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
+var path = require('path');
 
 describe('deploy:update task', function () {
   var shipit, clock;
@@ -25,6 +26,9 @@ describe('deploy:update task', function () {
         deployTo: '/remote/deploy'
       }
     });
+
+    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
+    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
 
     sinon.stub(shipit, 'remote').resolves();
     sinon.stub(shipit, 'remoteCopy').resolves();

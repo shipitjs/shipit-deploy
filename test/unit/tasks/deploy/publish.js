@@ -4,6 +4,7 @@ var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var publishFactory = require('../../../../tasks/deploy/publish');
 var path = require('path');
+
 describe('deploy:publish task', function () {
   var shipit;
 
