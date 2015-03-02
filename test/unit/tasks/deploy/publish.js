@@ -3,7 +3,7 @@ require('sinon-as-promised');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var publishFactory = require('../../../../tasks/deploy/publish');
-
+var path = require('path');
 describe('deploy:publish task', function () {
   var shipit;
 
@@ -24,6 +24,8 @@ describe('deploy:publish task', function () {
 
     shipit.releasePath = '/remote/deploy/releases/20141704123138';
     shipit.releaseDirname = '20141704123138';
+    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
+    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
 
     sinon.stub(shipit, 'remote').resolves();
   });
