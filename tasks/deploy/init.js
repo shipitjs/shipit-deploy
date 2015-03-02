@@ -1,5 +1,6 @@
 var registerTask = require('../../lib/register-task');
 var getShipit = require('../../lib/get-shipit');
+var path = require('path2/posix');
 
 /**
  * Init task.
@@ -11,6 +12,8 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = getShipit(gruntOrShipit);
+    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
+    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
     shipit.emit('deploy');
   }
 };
