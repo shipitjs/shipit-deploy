@@ -13,8 +13,7 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 'rollback:init', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
-
+    var shipit = require('../../lib/releases')(getShipit(gruntOrShipit));
     return defineReleasePath()
     .then(function () {
       shipit.emit('rollback');
@@ -30,7 +29,7 @@ module.exports = function (gruntOrShipit) {
 
       shipit.log('Get current release dirname.');
 
-      return getCurrentReleaseDirname()
+      return shipit.getCurrentReleaseDirname()
       .then(function (currentRelease) {
         if (!currentRelease)
           throw new Error('Cannot find current release dirname.');
@@ -39,7 +38,7 @@ module.exports = function (gruntOrShipit) {
 
         shipit.log('Getting dist releases.');
 
-        return getReleases()
+        return shipit.getReleases()
         .then(function (releases) {
           if (!releases)
             throw new Error('Cannot read releases.');
@@ -59,85 +58,6 @@ module.exports = function (gruntOrShipit) {
           shipit.releasePath = path.join(shipit.releasesPath, shipit.releaseDirname);
         });
       });
-
-      /**
-       * Return the current release dirname.
-       */
-
-      function getCurrentReleaseDirname() {
-        return shipit.remote('readlink ' + shipit.currentPath)
-        .then(function (results) {
-          var releaseDirnames = results.map(computeReleaseDirname);
-
-          if (!equalValues(releaseDirnames))
-            throw new Error('Remote server are not synced.');
-
-          return releaseDirnames[0];
-        });
-      }
-
-      /**
-       * Compute the current release dir name.
-       *
-       * @param {object} result
-       * @returns {string}
-       */
-
-      function computeReleaseDirname(result) {
-        if (!result.stdout) return null;
-
-        // Trim last breakline.
-        var target = result.stdout.replace(/\n$/, '');
-
-        return target.split(path.sep).pop();
-      }
-
-
-      /**
-       * Return all remote releases.
-       */
-
-      function getReleases() {
-        return shipit.remote('ls -r1 ' + shipit.releasesPath)
-        .then(function (results) {
-          var releases = results.map(computeReleases);
-
-          if (!equalValues(releases))
-            throw new Error('Remote server are not synced.');
-
-          return releases[0];
-        });
-      }
-
-      /**
-       * Compute the current release dir name.
-       *
-       * @param {object} result
-       * @returns {string}
-       */
-
-      function computeReleases(result) {
-        if (!result.stdout) return null;
-
-        // Trim last breakline.
-        var dirs = result.stdout.replace(/\n$/, '');
-
-        // Convert releases to an array.
-        return dirs.split('\n');
-      }
-
-      /**
-       * Test if all values are equal.
-       *
-       * @param {*[]} values
-       * @returns {boolean}
-       */
-
-      function equalValues(values) {
-        return values.every(function (value) {
-          return _.isEqual(value, values[0]);
-        });
-      }
     }
   }
 };
