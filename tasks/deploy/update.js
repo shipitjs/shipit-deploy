@@ -18,7 +18,7 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = getShipit(gruntOrShipit);
-    _.assign(shipit.constructor.prototype, require('../../lib/releases'));
+    _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
     return setPreviousRevision()
     .then(createReleasePath)
@@ -63,16 +63,18 @@ module.exports = function (gruntOrShipit) {
 
     function setPreviousRevision() {
       return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
-        var revision = false;
-        if (previousReleaseDir) {
-          var file = path.join(shipit.releasesPath, previousReleaseDir, 'REVISION');
-          return shipit.remote('if [ -f ' + file + ' ]; then cat ' + file + ' 2>/dev/null; fi;').then(function(response) {
+        var previousRevision = false;
 
-            // TODO: How should we handle multiple?
-            revision = response[0].stdout.trim();
+        if (previousReleaseDir) {
+          return shipit.getRevision(previousReleaseDir).then(function(revision) {
+            if (revision) {
+              shipit.log(chalk.green('Previous revision found.'));
+              previousRevision = revision;
+            }
           });
         }
-        shipit.previousRevision = revision;
+
+        shipit.previousRevision = previousRevision;
       });
     }
 
