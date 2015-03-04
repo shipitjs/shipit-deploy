@@ -4,6 +4,7 @@ var moment = require('moment');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
+var Promise = require('bluebird');
 var path = require('path');
 
 describe('deploy:update task', function () {
@@ -26,9 +27,6 @@ describe('deploy:update task', function () {
         deployTo: '/remote/deploy'
       }
     });
-
-    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
 
     sinon.stub(shipit, 'remote').resolves();
     sinon.stub(shipit, 'remoteCopy').resolves();
@@ -54,4 +52,41 @@ describe('deploy:update task', function () {
 
     clock.tick(5);
   });
+
+  describe('#setPreviousRevision', function () {
+    describe('no previous revision', function () {
+      it('should set shipit.previousRevision to false', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.previousRevision).to.equal(false);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('#setCurrentRevision', function () {
+    beforeEach(function () {
+      sinon.stub(shipit, 'local', function (command) {
+        if (command === 'git rev-parse ' + shipit.config.branch) {
+          return Promise.resolve(
+            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+          );
+        }
+      });
+    });
+
+    afterEach(function () {
+      shipit.local.restore();
+    });
+
+    it('should set shipit.currentRevision', function (done) {
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        expect(shipit.currentRevision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+        done();
+      });
+    });
+  });
+
 });
