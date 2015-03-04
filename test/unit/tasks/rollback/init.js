@@ -42,7 +42,7 @@ describe('rollback:init task', function () {
 
       it('should return an error', function (done) {
         shipit.start('rollback:init', function (err) {
-          expect(err.message).to.equal('Remote server are not synced.');
+          expect(err.message).to.equal('Remote servers are not synced.');
           done();
         });
       });
@@ -91,7 +91,7 @@ describe('rollback:init task', function () {
 
       it('should return an error', function (done) {
         shipit.start('rollback:init', function (err) {
-          expect(err.message).to.equal('Remote server are not synced.');
+          expect(err.message).to.equal('Remote servers are not synced.');
           done();
         });
       });
