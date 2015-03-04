@@ -14,7 +14,7 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = getShipit(gruntOrShipit);
-    _.assign(shipit.constructor.prototype, require('../../lib/releases'));
+    _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
     return defineReleasePath()
     .then(function () {
