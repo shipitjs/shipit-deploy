@@ -7,7 +7,9 @@ var _ = require('lodash');
 
 /**
  * Update task.
+ * - Set previous revision.
  * - Create and define release path.
+ * - Set current revision and write REVISION file.
  * - Remote copy project.
  */
 
@@ -55,6 +57,10 @@ module.exports = function (gruntOrShipit) {
       });
     }
 
+    /**
+     * Set shipit.previousRevision from remote REVISION file
+     */
+
     function setPreviousRevision() {
       return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
         var file = path.join(shipit.releasesPath, previousReleaseDir, 'REVISION');
@@ -69,6 +75,10 @@ module.exports = function (gruntOrShipit) {
         shipit.previousRevision = revision;
       });
     }
+
+    /**
+     * Set shipit.currentRevision and write it to REVISION file.
+     */
 
     function setCurrentRevision() {
       shipit.log('Setting current revision and creating revision file.');
