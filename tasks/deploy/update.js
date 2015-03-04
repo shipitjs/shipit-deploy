@@ -63,9 +63,9 @@ module.exports = function (gruntOrShipit) {
 
     function setPreviousRevision() {
       return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
-        var file = path.join(shipit.releasesPath, previousReleaseDir, 'REVISION');
         var revision = false;
         if (previousReleaseDir) {
+          var file = path.join(shipit.releasesPath, previousReleaseDir, 'REVISION');
           return shipit.remote('if [ -f ' + file + ' ]; then cat ' + file + ' 2>/dev/null; fi;').then(function(response) {
 
             // TODO: How should we handle multiple?
