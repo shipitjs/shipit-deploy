@@ -74,6 +74,12 @@ describe('deploy:update task', function () {
           );
         }
       });
+
+      sinon.stub(shipit, 'getRevision', function (releaseDir) {
+        if (releaseDir === '20141704123137') {
+          return Promise.resolve('9d63d434a921f496c12854a53cef8d293e2b4756');
+        }
+      });
     });
 
     afterEach(function () {
@@ -87,6 +93,15 @@ describe('deploy:update task', function () {
         done();
       });
     });
-  });
 
+    it('should update remote REVISION file', function (done) {
+      shipit.start('deploy:update', function (err) {
+        shipit.getRevision('20141704123137').then(function(revision) {
+          expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+          done();
+        });
+      });
+    });
+
+  });
 });
