@@ -133,5 +133,16 @@ describe('deploy:update task', function () {
       });
     });
 
+    it('should update remote REVISION file', function (done) {
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        shipit.getRevision('20141704123137')
+        .then(function(revision) {
+          expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+          done();
+        });
+      });
+    });
+
   });
 });
