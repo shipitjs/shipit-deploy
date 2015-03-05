@@ -102,6 +102,6 @@ describe('deploy:update task', function () {
         });
       });
     });
-
   });
+
 });
