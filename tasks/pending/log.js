@@ -22,8 +22,9 @@ module.exports = function (gruntOrShipit) {
     .then(function(response) {
       var msg = chalk.green('\nNo pending commits.');
       response = (response !== null && response.stdout) ? response.stdout.trim(): response;
+
       if (response) {
-        msg = chalk.yellow(chalk.underline('\nPending commits:\n') + response.stdout);
+        msg = chalk.yellow(chalk.underline('\nPending commits:\n') + response);
       }
 
       shipit.log(msg);
