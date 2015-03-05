@@ -7,11 +7,9 @@ var registerTask = require('../../lib/register-task');
  */
 
 module.exports = function (gruntOrShipit) {
-  require('./init')(gruntOrShipit);
   require('./log')(gruntOrShipit);
 
   registerTask(gruntOrShipit, 'pending', [
-    'pending:init',
     'pending:log',
   ]);
 };

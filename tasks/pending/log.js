@@ -13,13 +13,16 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = getShipit(gruntOrShipit);
+    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
+    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
+    shipit.config.gitLogFormat = shipit.config.gitLogFormat || '%h: %s - %an';
     _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
     return shipit.getPendingCommits()
     .then(function(response) {
       var msg = chalk.green('\nNo pending commits.');
-
-      if (response.stdout) {
+      response = (response !== null && response.stdout) ? response.stdout.trim(): response;
+      if (response) {
         msg = chalk.yellow(chalk.underline('\nPending commits:\n') + response.stdout);
       }
 
