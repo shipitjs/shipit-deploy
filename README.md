@@ -102,6 +102,12 @@ Type: `Boolean`
 
 Perform a shallow clone. Default: `false`.
 
+### gitLogFormat
+
+Type: `String`
+
+Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
+
 ## Variables
 
 Several variables are attached during the deploy and the rollback process:
@@ -173,6 +179,9 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
   - deploy:clean
     - Remove old releases.
     - Emit event "cleaned".
+- pending
+  - pending:log
+    - Log pending commits (diff between HEAD and currently deployed revision) to console.
 
 ## Dependencies
 
