@@ -55,10 +55,10 @@ describe('deploy:update task', function () {
 
   describe('#setPreviousRevision', function () {
     describe('no previous revision', function () {
-      it('should set shipit.previousRevision to false', function (done) {
+      it('should set shipit.previousRevision to null', function (done) {
         shipit.start('deploy:update', function (err) {
           if (err) return done(err);
-          expect(shipit.previousRevision).to.equal(false);
+          expect(shipit.previousRevision).to.equal(null);
           done();
         });
       });

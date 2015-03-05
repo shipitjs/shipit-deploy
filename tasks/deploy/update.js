@@ -63,7 +63,7 @@ module.exports = function (gruntOrShipit) {
 
     function setPreviousRevision() {
       return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
-        var previousRevision = false;
+        var previousRevision = null;
 
         if (previousReleaseDir) {
           return shipit.getRevision(previousReleaseDir).then(function(revision) {
