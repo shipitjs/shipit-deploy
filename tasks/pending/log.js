@@ -15,12 +15,11 @@ module.exports = function (gruntOrShipit) {
   function task() {
     var shipit = init(getShipit(gruntOrShipit));
     return shipit.getPendingCommits()
-    .then(function(response) {
+    .then(function(commits) {
       var msg = chalk.green('\nNo pending commits.');
-      response = (response !== null && response.stdout) ? response.stdout.trim(): response;
 
-      if (response) {
-        msg = chalk.yellow(chalk.underline('\nPending commits:\n') + response);
+      if (commits) {
+        msg = chalk.yellow(chalk.underline('\nPending commits:\n') + commits);
       }
 
       shipit.log(msg);
