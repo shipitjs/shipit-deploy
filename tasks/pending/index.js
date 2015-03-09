@@ -11,5 +11,5 @@ module.exports = function (gruntOrShipit) {
 
   utils.registerTask(gruntOrShipit, 'pending', [
     'pending:log',
-  ]);
+  ], false);
 };

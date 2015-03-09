@@ -11,7 +11,7 @@ var Promise = require('bluebird');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:fetch', task);
+  utils.registerTask(gruntOrShipit, 'deploy:fetch', task, false);
 
   function task() {
     var shipit = utils.getShipit(gruntOrShipit);

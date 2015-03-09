@@ -6,7 +6,7 @@ var utils = require('shipit-utils');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:clean', task);
+  utils.registerTask(gruntOrShipit, 'deploy:clean', task, false);
 
   function task() {
     var shipit = utils.getShipit(gruntOrShipit);

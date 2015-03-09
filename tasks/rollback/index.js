@@ -16,5 +16,5 @@ module.exports = function (gruntOrShipit) {
     'rollback:init',
     'deploy:publish',
     'deploy:clean'
-  ]);
+  ], false);
 };

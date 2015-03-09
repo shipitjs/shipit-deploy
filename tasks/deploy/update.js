@@ -13,7 +13,7 @@ var _ = require('lodash');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:update', task);
+  utils.registerTask(gruntOrShipit, 'deploy:update', task, false);
 
   function task() {
     var shipit = utils.getShipit(gruntOrShipit);
