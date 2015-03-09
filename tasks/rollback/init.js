@@ -1,5 +1,6 @@
 var registerTask = require('../../lib/register-task');
 var getShipit = require('../../lib/get-shipit');
+var init = require('../../lib/init');
 var path = require('path2/posix');
 var _ = require('lodash');
 
@@ -13,8 +14,7 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 'rollback:init', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
-    _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
+    var shipit = init(getShipit(gruntOrShipit));
 
     return defineReleasePath()
     .then(function () {
