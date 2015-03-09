@@ -21,5 +21,5 @@ module.exports = function (gruntOrShipit) {
     'deploy:update',
     'deploy:publish',
     'deploy:clean'
-  ]);
+  ], false);
 };

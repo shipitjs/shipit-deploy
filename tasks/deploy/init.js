@@ -8,7 +8,7 @@ var path = require('path2/posix');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:init', task);
+  utils.registerTask(gruntOrShipit, 'deploy:init', task, false);
 
   function task() {
     var shipit = init(utils.getShipit(gruntOrShipit));

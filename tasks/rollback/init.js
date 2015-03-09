@@ -10,7 +10,7 @@ var _ = require('lodash');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'rollback:init', task);
+  utils.registerTask(gruntOrShipit, 'rollback:init', task, false);
 
   function task() {
     var shipit = init(utils.getShipit(gruntOrShipit));

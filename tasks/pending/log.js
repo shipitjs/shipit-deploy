@@ -9,7 +9,7 @@ var chalk = require('chalk');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'pending:log', task);
+  utils.registerTask(gruntOrShipit, 'pending:log', task, false);
 
   function task() {
     var shipit = init(utils.getShipit(gruntOrShipit));
