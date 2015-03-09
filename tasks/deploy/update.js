@@ -3,10 +3,13 @@ var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
+var _ = require('lodash');
 
 /**
  * Update task.
+ * - Set previous revision.
  * - Create and define release path.
+ * - Set current revision and write REVISION file.
  * - Remote copy project.
  */
 
@@ -15,8 +18,11 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = getShipit(gruntOrShipit);
+    _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
-    return createReleasePath()
+    return setPreviousRevision()
+    .then(createReleasePath)
+    .then(setCurrentRevision)
     .then(remoteCopy)
     .then(function () {
       shipit.emit('updated');
@@ -48,6 +54,42 @@ module.exports = function (gruntOrShipit) {
       return shipit.remoteCopy(shipit.config.workspace + '/', shipit.releasePath)
       .then(function () {
         shipit.log(chalk.green('Finished copy.'));
+      });
+    }
+
+    /**
+     * Set shipit.previousRevision from remote REVISION file
+     */
+
+    function setPreviousRevision() {
+      return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
+        var previousRevision = null;
+
+        if (previousReleaseDir) {
+          return shipit.getRevision(previousReleaseDir).then(function(revision) {
+            if (revision) {
+              shipit.log(chalk.green('Previous revision found.'));
+              previousRevision = revision;
+            }
+          });
+        }
+
+        shipit.previousRevision = previousRevision;
+      });
+    }
+
+    /**
+     * Set shipit.currentRevision and write it to REVISION file.
+     */
+
+    function setCurrentRevision() {
+      shipit.log('Setting current revision and creating revision file.');
+
+      return shipit.local('git rev-parse ' + shipit.config.branch).then(function(response) {
+        shipit.currentRevision = response.stdout.trim();
+        return shipit.remote('echo "' + shipit.currentRevision + '" > ' + path.join(shipit.releasePath, 'REVISION'));
+      }).then(function() {
+        shipit.log(chalk.green('Revision file created.'));
       });
     }
   }
