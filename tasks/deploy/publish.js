@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 var chalk = require('chalk');
 var path = require('path2/posix');
 
@@ -9,10 +8,10 @@ var path = require('path2/posix');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'deploy:publish', task);
+  utils.registerTask(gruntOrShipit, 'deploy:publish', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = utils.getShipit(gruntOrShipit);
 
     return updateSymbolicLink()
     .then(function () {

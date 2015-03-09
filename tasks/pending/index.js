@@ -1,4 +1,4 @@
-var registerTask = require('../../lib/register-task');
+var utils = require('shipit-utils');
 
 /**
  * Pending task.
@@ -9,7 +9,7 @@ var registerTask = require('../../lib/register-task');
 module.exports = function (gruntOrShipit) {
   require('./log')(gruntOrShipit);
 
-  registerTask(gruntOrShipit, 'pending', [
+  utils.registerTask(gruntOrShipit, 'pending', [
     'pending:log',
   ]);
 };
