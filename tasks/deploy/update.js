@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
@@ -14,10 +13,10 @@ var _ = require('lodash');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'deploy:update', task);
+  utils.registerTask(gruntOrShipit, 'deploy:update', task);
 
   function task() {
-    var shipit = getShipit(gruntOrShipit);
+    var shipit = utils.getShipit(gruntOrShipit);
     _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
     return setPreviousRevision()

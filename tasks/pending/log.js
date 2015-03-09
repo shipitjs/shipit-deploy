@@ -1,5 +1,4 @@
-var registerTask = require('../../lib/register-task');
-var getShipit = require('../../lib/get-shipit');
+var utils = require('shipit-utils');
 var init = require('../../lib/init');
 var path = require('path');
 var _ = require('lodash');
@@ -10,10 +9,10 @@ var chalk = require('chalk');
  */
 
 module.exports = function (gruntOrShipit) {
-  registerTask(gruntOrShipit, 'pending:log', task);
+  utils.registerTask(gruntOrShipit, 'pending:log', task);
 
   function task() {
-    var shipit = init(getShipit(gruntOrShipit));
+    var shipit = init(utils.getShipit(gruntOrShipit));
     return shipit.getPendingCommits()
     .then(function(commits) {
       var msg = chalk.green('\nNo pending commits.');
