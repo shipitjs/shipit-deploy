@@ -26,9 +26,6 @@ module.exports = function (gruntOrShipit) {
      */
 
     function defineReleasePath() {
-      shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-      shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
-
       shipit.log('Get current release dirname.');
 
       return shipit.getCurrentReleaseDirname()
