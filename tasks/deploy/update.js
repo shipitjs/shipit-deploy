@@ -3,11 +3,15 @@ var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
 var _ = require('lodash');
+var util = require('util');
+var Promise = require('bluebird');
 
 /**
  * Update task.
+ * - Set previous release.
  * - Set previous revision.
  * - Create and define release path.
+ * - Copy previous release (for faster rsync)
  * - Set current revision and write REVISION file.
  * - Remote copy project.
  */
@@ -19,13 +23,26 @@ module.exports = function (gruntOrShipit) {
     var shipit = utils.getShipit(gruntOrShipit);
     _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
 
-    return setPreviousRevision()
+    return setPreviousRelease()
+    .then(setPreviousRevision)
     .then(createReleasePath)
+    .then(copyPreviousRelease)
     .then(setCurrentRevision)
     .then(remoteCopy)
     .then(function () {
       shipit.emit('updated');
     });
+
+    /**
+     * Copy previous release to release dir.
+     */
+
+    function copyPreviousRelease() {
+      if (!shipit.previousRelease) {
+        return Promise.resolve();
+      }
+      return shipit.remote(util.format('cp -R %s %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
+    }
 
     /**
      * Create and define release path.
@@ -57,23 +74,38 @@ module.exports = function (gruntOrShipit) {
     }
 
     /**
-     * Set shipit.previousRevision from remote REVISION file
+     * Set shipit.previousRevision from remote REVISION file.
      */
 
     function setPreviousRevision() {
-      return shipit.getPreviousReleaseDirname().then(function(previousReleaseDir) {
-        var previousRevision = null;
+      shipit.previousRevision = null;
 
-        if (previousReleaseDir) {
-          return shipit.getRevision(previousReleaseDir).then(function(revision) {
-            if (revision) {
-              shipit.log(chalk.green('Previous revision found.'));
-              previousRevision = revision;
-            }
-          });
+      if (!shipit.previousRelease) {
+        return Promise.resolve();
+      }
+
+      return shipit.getRevision(shipit.previousRelease)
+      .then(function(revision) {
+
+        if (revision) {
+          shipit.log(chalk.green('Previous revision found.'));
+          shipit.previousRevision = revision;
         }
+      });
+    }
 
-        shipit.previousRevision = previousRevision;
+    /**
+     * Set shipit.previousRelease.
+     */
+
+    function setPreviousRelease() {
+      shipit.previousRelease = null;
+      return shipit.getPreviousReleaseDirname()
+      .then(function(previousReleaseDir) {
+        if (previousReleaseDir) {
+          shipit.log(chalk.green('Previous release found.'));
+          shipit.previousRelease = previousReleaseDir;
+        }
       });
     }
 

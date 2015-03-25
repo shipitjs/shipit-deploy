@@ -83,6 +83,46 @@ describe('deploy:update task', function () {
     });
   });
 
+  describe('#setPreviousRelease', function () {
+    beforeEach(function () {
+      sinon.stub(shipit, 'remote').resolves();
+      sinon.stub(shipit, 'remoteCopy').resolves();
+    });
+    afterEach(function () {
+      shipit.remote.restore();
+      shipit.remoteCopy.restore();
+    });
+    describe('no previous release', function () {
+      it('should set shipit.previousRelease to null', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.previousRelease).to.equal(null);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('#copyPreviousRelease', function () {
+    beforeEach(function () {
+      sinon.stub(shipit, 'remote').resolves();
+      sinon.stub(shipit, 'remoteCopy').resolves();
+    });
+    afterEach(function () {
+      shipit.remote.restore();
+      shipit.remoteCopy.restore();
+    });
+    describe('no previous release', function () {
+      it('should proceed with rsync', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.previousRelease).to.equal(null);
+          done();
+        });
+      });
+    });
+  });
+
   describe('#setCurrentRevision', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remoteCopy').resolves();
