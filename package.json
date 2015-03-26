@@ -1,6 +1,6 @@
 {
   "name": "shipit-deploy",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Set of deployment tasks for Shipit based on git and rsync commands. ",
   "main": "index.js",
   "directories": {
