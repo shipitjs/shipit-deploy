@@ -130,7 +130,7 @@ The current release dirname of the project, the format used is "YYYYMMDDHHmmss" 
 
 ### shipit.releasesPath
 
-Attached during `deploy:update` and `rollback:init` task.
+Attached during `deploy:init`, `rollback:init`, and `pending:log` tasks.
 
 The remote releases path.
 
@@ -142,7 +142,7 @@ The complete release path : `path.join(shipit.releasesPath, shipit.releaseDirnam
 
 ### shipit.currentPath
 
-Attached during `deploy:publish` and `rollback:init` task.
+Attached during `deploy:init`, `rollback:init`, and `pending:log` tasks.
 
 The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 
