@@ -156,7 +156,7 @@ describe('deploy:update task', function () {
           ]);
         }
 
-        if (command === 'readlink /remote/deploy/current') {
+        if (command === 'if [ -h /remote/deploy/current ]; then readlink /remote/deploy/current; fi') {
           return Promise.resolve([
             {stdout: '/remote/deploy/releases/20141704123137'}
           ]);
