@@ -91,6 +91,7 @@ describe('deploy:update task', function () {
         shipit.start('deploy:update', function (err) {
           if (err) return done(err);
           expect(shipit.previousRevision).to.equal(null);
+          expect(shipit.local).to.be.calledWith('git rev-parse ' + shipit.config.branch, {cwd: '/tmp/workspace'});
           done();
         });
       });
