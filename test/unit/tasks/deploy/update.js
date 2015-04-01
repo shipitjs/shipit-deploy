@@ -137,6 +137,59 @@ describe('deploy:update task', function () {
     });
   });
 
+  describe('#copyPreviousRelease:release exists', function () {
+
+     beforeEach(function () {
+
+      sinon.stub(shipit, 'remoteCopy').resolves();
+      sinon.stub(shipit, 'remote', function (command) {
+        if (command === 'if [ -h /remote/deploy/current ]; then readlink /remote/deploy/current; fi') {
+          return Promise.resolve([
+            {stdout: '/remote/deploy/releases/20141704123137'}
+          ]);
+        }
+
+        if (command === 'ls -r1 /remote/deploy/releases') {
+          return Promise.resolve([
+            {stdout: '20141704123137\n20141704123133\n'},
+            {stdout: '20141704123137\n20141704123133\n'}
+          ]);
+        }
+
+        if(/^cp/.test(command)) {
+          var args = command.split(' ');
+          if(/\/.$/.test(args[args.length-2]) === false) {
+            return Promise.reject(new Error("Copy folder contents, not the folder itself"));
+          }
+        }
+
+        return Promise.resolve([{stdout: ''}]);
+
+      });
+
+    });
+
+    afterEach(function () {
+      shipit.remote.restore();
+      shipit.remoteCopy.restore();
+    });
+
+    describe('previous release exists', function () {
+      it('should copy contents of previous release into new folder', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if(err) { return done(err); }
+          expect(shipit.previousRelease).not.to.equal(null);
+          done();
+        });
+      });
+    });
+
+
+  });
+
+
+  
+
   describe('#setCurrentRevision', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remoteCopy').resolves();
