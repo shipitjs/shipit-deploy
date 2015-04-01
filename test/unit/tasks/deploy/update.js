@@ -91,6 +91,7 @@ describe('deploy:update task', function () {
         shipit.start('deploy:update', function (err) {
           if (err) return done(err);
           expect(shipit.previousRevision).to.equal(null);
+          expect(shipit.local).to.be.calledWith('git rev-parse ' + shipit.config.branch, {cwd: '/tmp/workspace'});
           done();
         });
       });
@@ -101,6 +102,13 @@ describe('deploy:update task', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remote').resolves();
       sinon.stub(shipit, 'remoteCopy').resolves();
+      sinon.stub(shipit, 'local', function (command) {
+        if (command === 'git rev-parse ' + shipit.config.branch) {
+          return Promise.resolve(
+            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+          );
+        }
+      });
     });
     afterEach(function () {
       shipit.remote.restore();
@@ -121,6 +129,13 @@ describe('deploy:update task', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remote').resolves();
       sinon.stub(shipit, 'remoteCopy').resolves();
+      sinon.stub(shipit, 'local', function (command) {
+        if (command === 'git rev-parse ' + shipit.config.branch) {
+          return Promise.resolve(
+            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+          );
+        }
+      });
     });
     afterEach(function () {
       shipit.remote.restore();
