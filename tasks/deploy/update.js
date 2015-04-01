@@ -41,7 +41,7 @@ module.exports = function (gruntOrShipit) {
       if (!shipit.previousRelease) {
         return Promise.resolve();
       }
-      return shipit.remote(util.format('rsync -az %s %s', path.join(shipit.releasesPath, shipit.previousRelease, '/'), shipit.releasePath));
+      return shipit.remote(util.format('cp -R %s %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
     }
 
     /**
