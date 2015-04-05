@@ -41,7 +41,7 @@ module.exports = function (gruntOrShipit) {
       if (!shipit.previousRelease) {
         return Promise.resolve();
       }
-      return shipit.remote(util.format('cp -R %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
+      return shipit.remote(util.format('cp -a %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
     }
 
     /**
@@ -66,7 +66,7 @@ module.exports = function (gruntOrShipit) {
     function remoteCopy() {
       shipit.log('Copy project to remote servers.');
 
-      return shipit.remoteCopy(shipit.config.workspace + '/', shipit.releasePath)
+      return shipit.remoteCopy(shipit.config.workspace + '/', shipit.releasePath, {rsync: '--del'})
       .then(function () {
         shipit.log(chalk.green('Finished copy.'));
       });
