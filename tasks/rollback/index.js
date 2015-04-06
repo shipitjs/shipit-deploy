@@ -11,10 +11,12 @@ module.exports = function (gruntOrShipit) {
   require('./init')(gruntOrShipit);
   require('../deploy/fetch')(gruntOrShipit);
   require('../deploy/clean')(gruntOrShipit);
+  require('./finish')(gruntOrShipit);
 
   utils.registerTask(gruntOrShipit, 'rollback', [
     'rollback:init',
     'deploy:publish',
-    'deploy:clean'
+    'deploy:clean',
+    'rollback:finish'
   ]);
 };

@@ -179,6 +179,8 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
   - deploy:clean
     - Remove old releases.
     - Emit event "cleaned".
+  - rollback:finish
+    - Emit event "rollbacked".
 - pending
   - pending:log
     - Log pending commits (diff between HEAD and currently deployed revision) to console.
