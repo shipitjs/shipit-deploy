@@ -1,7 +1,6 @@
 var utils = require('shipit-utils');
 var init = require('../../lib/init');
 var path = require('path2/posix');
-var _ = require('lodash');
 
 /**
  * Update task.
