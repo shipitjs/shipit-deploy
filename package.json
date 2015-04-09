@@ -28,7 +28,6 @@
     "chai": "^2.1.2",
     "mocha": "^2.1.0",
     "rewire": "^2.1.4",
-    "shipit": "^0.1.16",
     "shipit-cli": "^1.0.0",
     "sinon": "^1.12.2",
     "sinon-as-promised": "^2.0.3",
