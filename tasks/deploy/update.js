@@ -27,8 +27,8 @@ module.exports = function (gruntOrShipit) {
     .then(setPreviousRevision)
     .then(createReleasePath)
     .then(copyPreviousRelease)
-    .then(setCurrentRevision)
     .then(remoteCopy)
+    .then(setCurrentRevision)
     .then(function () {
       shipit.emit('updated');
     });
