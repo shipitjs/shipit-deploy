@@ -21,6 +21,7 @@ module.exports = function (gruntOrShipit) {
     .then(addRemote)
     .then(fetch)
     .then(checkout)
+    .then(reset)
     .then(merge)
     .then(function () {
       shipit.emit('fetched');
@@ -119,6 +120,21 @@ module.exports = function (gruntOrShipit) {
       )
       .then(function () {
         shipit.log(chalk.green('Checked out.'));
+      });
+    }
+    
+    /**
+     * Hard reset of working tree.
+     */
+
+    function reset() {
+      shipit.log('Reseting the working tree');
+      return shipit.local(
+        'git reset --hard HEAD',
+        {cwd: shipit.config.workspace}
+      )
+      .then(function () {
+        shipit.log(chalk.green('Reset working tree.'));
       });
     }
 
