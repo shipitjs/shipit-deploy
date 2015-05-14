@@ -66,6 +66,13 @@ Type: `String`
 
 Define the local working path of the project deployed.
 
+### dirToCopy
+
+Type: `String`
+Default: same as workspace
+
+Define directory within the workspace which should be deployed. 
+
 ### deployTo
 
 Type: `String`
