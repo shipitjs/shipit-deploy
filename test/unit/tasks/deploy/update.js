@@ -144,10 +144,9 @@ describe('deploy:update task', function () {
       shipit = stubShipit(shipit);
       shipit.remote.restore();
       sinon.stub(shipit, 'remote', function (command) {
-        var file = '/remote/deploy/releases/20141704123137/REVISION';
         if (/^if \[ \-f/.test(command)) {
           return Promise.resolve([
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'},
+            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
           ]);
         }
 
