@@ -82,6 +82,34 @@ describe('deploy:update task', function () {
 
       clock.tick(5);
     });
+
+    describe('dirToCopy option', function () {
+      it('should correct join relative path', function () {
+        var paths = [
+          {res: '/tmp/workspace/build/', dirToCopy: 'build'},
+          {res: '/tmp/workspace/build/', dirToCopy: './build'},
+          {res: '/tmp/workspace/build/', dirToCopy: './build/'},
+          {res: '/tmp/workspace/build/', dirToCopy: 'build/.'},
+          {res: '/tmp/workspace/build/src/', dirToCopy: 'build/src'},
+          {res: '/tmp/workspace/build/src/', dirToCopy: 'build/src'}
+        ];
+        return Promise.all(paths.map(function (path) {
+          return new Promise(function (resolve, reject) {
+            var shipit = stubShipit(createShipitInstance({
+              dirToCopy: path.dirToCopy
+            }));
+            shipit.start('deploy:update', function (err) {
+              if (err) reject(err);
+              var dirName = moment.utc().format('YYYYMMDDHHmmss');
+              expect(shipit.remoteCopy).to.be.calledWith(path.res, '/remote/deploy/releases/' + dirName);
+              clock.tick(5);
+              resolve()
+            })
+          });
+        }));
+      })
+    });
+
   });
 
   describe('#setPreviousRevision', function () {
