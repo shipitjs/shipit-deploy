@@ -1,6 +1,7 @@
 var sinon = require('sinon');
 require('sinon-as-promised');
 var moment = require('moment');
+var _ = require('lodash');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
