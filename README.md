@@ -92,9 +92,9 @@ An array of paths that match ignored files. These paths are used in the rsync co
 
 ### keepReleases
 
-Type: `String`
+Type: `Number`
 
-Number of release to keep on the remote server.
+Number of releases to keep on the remote server.
 
 ### shallowClone
 
