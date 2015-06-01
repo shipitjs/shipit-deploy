@@ -1,59 +1,73 @@
 var sinon = require('sinon');
 require('sinon-as-promised');
 var moment = require('moment');
+var _ = require('lodash');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
 var Promise = require('bluebird');
 var path = require('path');
 
+var createShipitInstance = function (conf) {
+  var shipit = new Shipit({
+    environment: 'test',
+    log: sinon.stub()
+  });
+
+  updateFactory(shipit);
+
+  // Shipit config
+  shipit.initConfig({
+    test: _.merge({
+      workspace: '/tmp/workspace',
+      deployTo: '/remote/deploy'
+    }, conf)
+  });
+
+  shipit.currentPath = path.join(shipit.config.deployTo, 'current');
+  shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
+
+  return shipit;
+};
+
+function stubShipit(shipit) {
+  sinon.stub(shipit, 'remote').resolves();
+  sinon.stub(shipit, 'remoteCopy').resolves();
+  sinon.stub(shipit, 'local', function (command) {
+    if (command === 'git rev-parse ' + shipit.config.branch) {
+      return Promise.resolve(
+        {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+      );
+    }
+  });
+  return shipit;
+}
+
+function restoreShipit(shipit) {
+  shipit.remote.restore();
+  shipit.remoteCopy.restore();
+  shipit.local.restore();
+  return shipit;
+}
+
 describe('deploy:update task', function () {
   var shipit, clock;
 
   beforeEach(function () {
-    shipit = new Shipit({
-      environment: 'test',
-      log: sinon.stub()
-    });
-
-    updateFactory(shipit);
-
+    shipit = createShipitInstance();
     clock = sinon.useFakeTimers(1397730698075);
-
-    // Shipit config
-    shipit.initConfig({
-      test: {
-        workspace: '/tmp/workspace',
-        deployTo: '/remote/deploy'
-      }
-    });
-
-    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
   });
-
   afterEach(function () {
     clock.restore();
   });
 
   describe('update release', function () {
     beforeEach(function () {
-      sinon.stub(shipit, 'remote').resolves();
-      sinon.stub(shipit, 'remoteCopy').resolves();
-      sinon.stub(shipit, 'local', function (command) {
-        if (command === 'git rev-parse ' + shipit.config.branch) {
-          return Promise.resolve(
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
-          );
-        }
-      });
+      shipit = stubShipit(shipit);
     });
-
     afterEach(function () {
-      shipit.remote.restore();
-      shipit.remoteCopy.restore();
+      shipit = restoreShipit(shipit);
     });
-
     it('should create release path, and do a remote copy', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -68,23 +82,42 @@ describe('deploy:update task', function () {
 
       clock.tick(5);
     });
+
+    describe('dirToCopy option', function () {
+      it('should correct join relative path', function () {
+        var paths = [
+          {res: '/tmp/workspace/build/', dirToCopy: 'build'},
+          {res: '/tmp/workspace/build/', dirToCopy: './build'},
+          {res: '/tmp/workspace/build/', dirToCopy: './build/'},
+          {res: '/tmp/workspace/build/', dirToCopy: 'build/.'},
+          {res: '/tmp/workspace/build/src/', dirToCopy: 'build/src'},
+          {res: '/tmp/workspace/build/src/', dirToCopy: 'build/src'}
+        ];
+        return Promise.all(paths.map(function (path) {
+          return new Promise(function (resolve, reject) {
+            var shipit = stubShipit(createShipitInstance({
+              dirToCopy: path.dirToCopy
+            }));
+            shipit.start('deploy:update', function (err) {
+              if (err) reject(err);
+              var dirName = moment.utc().format('YYYYMMDDHHmmss');
+              expect(shipit.remoteCopy).to.be.calledWith(path.res, '/remote/deploy/releases/' + dirName);
+              clock.tick(5);
+              resolve()
+            })
+          });
+        }));
+      })
+    });
+
   });
 
   describe('#setPreviousRevision', function () {
     beforeEach(function () {
-      sinon.stub(shipit, 'remote').resolves();
-      sinon.stub(shipit, 'remoteCopy').resolves();
-      sinon.stub(shipit, 'local', function (command) {
-        if (command === 'git rev-parse ' + shipit.config.branch) {
-          return Promise.resolve(
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
-          );
-        }
-      });
+      shipit = stubShipit(shipit);
     });
     afterEach(function () {
-      shipit.remote.restore();
-      shipit.remoteCopy.restore();
+      shipit = restoreShipit(shipit);
     });
     describe('no previous revision', function () {
       it('should set shipit.previousRevision to null', function (done) {
@@ -100,19 +133,10 @@ describe('deploy:update task', function () {
 
   describe('#setPreviousRelease', function () {
     beforeEach(function () {
-      sinon.stub(shipit, 'remote').resolves();
-      sinon.stub(shipit, 'remoteCopy').resolves();
-      sinon.stub(shipit, 'local', function (command) {
-        if (command === 'git rev-parse ' + shipit.config.branch) {
-          return Promise.resolve(
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
-          );
-        }
-      });
+      shipit = stubShipit(shipit);
     });
     afterEach(function () {
-      shipit.remote.restore();
-      shipit.remoteCopy.restore();
+      shipit = restoreShipit(shipit);
     });
     describe('no previous release', function () {
       it('should set shipit.previousRelease to null', function (done) {
@@ -127,19 +151,10 @@ describe('deploy:update task', function () {
 
   describe('#copyPreviousRelease', function () {
     beforeEach(function () {
-      sinon.stub(shipit, 'remote').resolves();
-      sinon.stub(shipit, 'remoteCopy').resolves();
-      sinon.stub(shipit, 'local', function (command) {
-        if (command === 'git rev-parse ' + shipit.config.branch) {
-          return Promise.resolve(
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
-          );
-        }
-      });
+      shipit = stubShipit(shipit);
     });
     afterEach(function () {
-      shipit.remote.restore();
-      shipit.remoteCopy.restore();
+      shipit = restoreShipit(shipit);
     });
     describe('no previous release', function () {
       it('should proceed with rsync', function (done) {
@@ -154,20 +169,12 @@ describe('deploy:update task', function () {
 
   describe('#setCurrentRevision', function () {
     beforeEach(function () {
-      sinon.stub(shipit, 'remoteCopy').resolves();
-      sinon.stub(shipit, 'local', function (command) {
-        if (command === 'git rev-parse ' + shipit.config.branch) {
-          return Promise.resolve(
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
-          );
-        }
-      });
-
+      shipit = stubShipit(shipit);
+      shipit.remote.restore();
       sinon.stub(shipit, 'remote', function (command) {
-        var file = '/remote/deploy/releases/20141704123137/REVISION';
         if (/^if \[ \-f/.test(command)) {
           return Promise.resolve([
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'},
+            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
           ]);
         }
 
@@ -196,9 +203,7 @@ describe('deploy:update task', function () {
     });
 
     afterEach(function () {
-      shipit.local.restore();
-      shipit.remote.restore();
-      shipit.remoteCopy.restore();
+      shipit = restoreShipit(shipit);
     });
 
     it('should set shipit.currentRevision', function (done) {
