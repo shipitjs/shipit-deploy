@@ -1,5 +1,6 @@
 var utils = require('shipit-utils');
 var init = require('../../lib/init');
+var Promise = require('bluebird');
 
 /**
  * Update task.
@@ -10,24 +11,26 @@ module.exports = function (gruntOrShipit) {
   utils.registerTask(gruntOrShipit, 'rollback:finish', task);
 
   function task() {
+
     var shipit = init(utils.getShipit(gruntOrShipit));
 
-    // Remove rollbacked release if desired
-    if(shipit.config.deleteOnRollback){
-      var currentReleaseIndex = releases.indexOf(currentRelease);
-      var rollbackReleaseIndex = currentReleaseIndex - 1;
+    return deleteRelease().then(function(){
+      shipit.emit('rollbacked');
+    });
 
-      var rollbackDirName = releases[rollbackReleaseIndex];
+    function deleteRelease() {
+      // Remove rollbacked release if desired
+      if (shipit.config.deleteOnRollback) {
+        if(!shipit.prevReleaseDirName || !shipit.prevReleasePath)
+          throw new Error("Can't find release to delete");
 
-      if(!rollbackDirName)
-        throw new Error ("Cannot find rollback release to delete");
+        var command = "rm -rf " + shipit.prevReleasePath;
 
-      shipit.log('Deleting release %s.', rollbackDirName);
-
-      var command = "rm -rf " + shipit.releasesPath + "/" + rollbackDirName;
-      shipit.remote(command);
-      shipit.log('Removed release %s', rollbackDirName);
+        return shipit.remote(command);
+      }
+      else{
+        return Promise.resolve([]);
+      }
     }
-    shipit.emit('rollbacked');
   }
-};
+}
