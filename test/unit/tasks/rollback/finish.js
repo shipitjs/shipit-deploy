@@ -3,6 +3,7 @@ var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var finishFactory = require('../../../../tasks/rollback/finish');
 var path = require('path');
+var Promise = require('bluebird');
 
 describe('rollback:finish task', function () {
   var shipit;
