@@ -36,6 +36,7 @@ module.exports = function (shipit) {
       repositoryUrl: 'https://github.com/user/repo.git',
       ignores: ['.git', 'node_modules'],
       keepReleases: 2,
+      deleteOnRollback: false,
       key: '/path/to/key',
       shallowClone: true
     },
@@ -96,6 +97,12 @@ Tag, branch or commit to deploy.
 Type: `Array<String>`
 
 An array of paths that match ignored files. These paths are used in the rsync command.
+
+### deleteOnRollback
+
+Type: `Boolean`
+
+Whether or not to delete the old release when rolling back to a previous release.
 
 ### keepReleases
 
