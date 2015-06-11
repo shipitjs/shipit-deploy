@@ -138,13 +138,25 @@ describe('deploy:update task', function () {
     afterEach(function () {
       shipit = restoreShipit(shipit);
     });
-    describe('no previous release', function () {
-      it('should set shipit.previousRelease to null', function (done) {
-        shipit.start('deploy:update', function (err) {
-          if (err) return done(err);
-          expect(shipit.previousRelease).to.equal(null);
-          done();
-        });
+    it('should set shipit.previousRelease to null when no previous release', function (done) {
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        expect(shipit.previousRelease).to.equal(null);
+        done();
+      });
+    });
+
+    it('should set shipit.previousRelease to (still) current release when one release exist', function (done) {
+      shipit.remote.restore();
+      sinon.stub(shipit, 'remote', function (command) {
+        return Promise.resolve([
+          {stdout: '20141704123137\n'}
+        ]);
+      });
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        expect(shipit.previousRelease).to.equal('20141704123137');
+        done();
       });
     });
   });
