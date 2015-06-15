@@ -65,14 +65,14 @@ shipit staging rollback
 
 Type: `String`
 
-Define the local working path of the project deployed.
+Define a path to an empty directory where Shipit builds it's syncing source. **Beware to not set this path to the root of your repository as shipit-deploy cleans the directory at the given path as a first step.**
 
 ### dirToCopy
 
 Type: `String`
 Default: same as workspace
 
-Define directory within the workspace which should be deployed. 
+Define directory within the workspace which should be deployed.
 
 ### deployTo
 
