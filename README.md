@@ -1,6 +1,6 @@
 # shipit-deploy
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/shipitjs/shipit-deploy.svg?branch=master)](https://travis-ci.org/shipitjs/shipit-deploy)
 [![Dependency Status](https://david-dm.org/shipitjs/shipit-deploy.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy)
@@ -128,7 +128,7 @@ Several variables are attached during the deploy and the rollback process:
 
 ### shipit.config.*
 
-All options describe in the config sections are avalaible in the `shipit.config` object.
+All options described in the config sections are available in the `shipit.config` object.
 
 ### shipit.repository
 
