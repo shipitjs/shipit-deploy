@@ -6,7 +6,7 @@ var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
 var Promise = require('bluebird');
-var path = require('path');
+var path = require('path2/posix');
 
 var createShipitInstance = function (conf) {
   var shipit = new Shipit({
