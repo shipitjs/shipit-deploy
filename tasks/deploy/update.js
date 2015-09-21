@@ -41,6 +41,7 @@ module.exports = function (gruntOrShipit) {
       if (!shipit.previousRelease) {
         return Promise.resolve();
       }
+      shipit.log('Copy previous release to "%s"', shipit.releasePath);
       return shipit.remote(util.format('cp -a %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
     }
 
