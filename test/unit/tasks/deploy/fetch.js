@@ -47,7 +47,7 @@ describe('deploy:fetch task', function () {
         'git remote add shipit git://website.com/user/repo',
         {cwd: '/tmp/workspace'}
       );
-      expect(shipit.local).to.be.calledWith('git fetch shipit -p', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git fetch shipit -p --tags', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
       done();
@@ -67,7 +67,7 @@ describe('deploy:fetch task', function () {
         'git remote add shipit git://website.com/user/repo',
         {cwd: '/tmp/workspace'}
       );
-      expect(shipit.local).to.be.calledWith('git fetch --depth=1 shipit -p', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git fetch --depth=1 shipit -p --tags', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
       done();

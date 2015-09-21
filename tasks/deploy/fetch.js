@@ -95,7 +95,7 @@ module.exports = function (gruntOrShipit) {
     function fetch() {
       var fetchCommand = 'git fetch' +
         (shipit.config.shallowClone ? ' --depth=1 ' : ' ') +
-        'shipit -p';
+        'shipit -p --tags';
 
       shipit.log('Fetching repository "%s"', shipit.config.repositoryUrl);
 
@@ -122,7 +122,7 @@ module.exports = function (gruntOrShipit) {
         shipit.log(chalk.green('Checked out.'));
       });
     }
-    
+
     /**
      * Hard reset of working tree.
      */
