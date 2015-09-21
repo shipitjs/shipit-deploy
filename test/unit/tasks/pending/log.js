@@ -3,7 +3,7 @@ require('sinon-as-promised');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var pendingFactory = require('../../../../tasks/pending/log');
-var path = require('path');
+var path = require('path2/posix');
 
 describe('pending:log task', function () {
   var shipit;
