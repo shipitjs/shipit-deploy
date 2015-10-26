@@ -23,6 +23,7 @@ module.exports = function (gruntOrShipit) {
     .then(checkout)
     .then(reset)
     .then(merge)
+    .then(updateSubmodules)
     .then(function () {
       shipit.emit('fetched');
     });
@@ -95,8 +96,10 @@ module.exports = function (gruntOrShipit) {
     function fetch() {
       var fetchCommand = 'git fetch' +
         (shipit.config.shallowClone ? ' --depth=1 ' : ' ') +
-        'shipit -p --tags';
+        'shipit -p --tags' + 
+	(shipit.config.updateSubmodules ? ' --recurse-submodules' : '');
 
+      shipit.log('fetch submodules: ' + shipit.config.recursiveFetch);
       shipit.log('Fetching repository "%s"', shipit.config.repositoryUrl);
 
       return shipit.local(
@@ -169,6 +172,19 @@ module.exports = function (gruntOrShipit) {
       .then(function () {
         shipit.log(chalk.green('Branch merged.'));
       });
+    }
+
+    function updateSubmodules() {
+      if(shipit.config.updateSubmodules){
+	shipit.log('Updating submodules.');
+	return shipit.local(
+	  'git submodule update --init --recursive',
+	  {cwd: shipit.config.workspace}
+	)
+	.then(function () {
+	  shipit.log(chalk.green('Submodules updated'));
+	});
+      }
     }
   }
 };

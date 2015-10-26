@@ -38,7 +38,8 @@ module.exports = function (shipit) {
       keepReleases: 2,
       deleteOnRollback: false,
       key: '/path/to/key',
-      shallowClone: true
+      shallowClone: true,
+      updateSubmodules: false
     },
     staging: {
       servers: 'user@myserver.com'
@@ -121,6 +122,12 @@ Perform a shallow clone. Default: `false`.
 Type: `String`
 
 Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
+
+### updateSubmodules
+
+Type: `Boolean`
+
+If your project uses submodules set this to true to pull in the submodules at deployment time.
 
 ## Variables
 
