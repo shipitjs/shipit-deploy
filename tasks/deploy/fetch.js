@@ -99,7 +99,6 @@ module.exports = function (gruntOrShipit) {
         'shipit -p --tags' + 
 	(shipit.config.updateSubmodules ? ' --recurse-submodules' : '');
 
-      shipit.log('fetch submodules: ' + shipit.config.recursiveFetch);
       shipit.log('Fetching repository "%s"', shipit.config.repositoryUrl);
 
       return shipit.local(
@@ -175,15 +174,15 @@ module.exports = function (gruntOrShipit) {
     }
 
     function updateSubmodules() {
-      if(shipit.config.updateSubmodules){
-	shipit.log('Updating submodules.');
-	return shipit.local(
-	  'git submodule update --init --recursive',
-	  {cwd: shipit.config.workspace}
-	)
-	.then(function () {
-	  shipit.log(chalk.green('Submodules updated'));
-	});
+      if (shipit.config.updateSubmodules) {
+        shipit.log('Updating submodules.');
+        return shipit.local(
+            'git submodule update --init --recursive',
+            {cwd: shipit.config.workspace}
+        )
+            .then(function () {
+              shipit.log(chalk.green('Submodules updated'));
+            });
       }
     }
   }

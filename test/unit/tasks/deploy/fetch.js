@@ -73,4 +73,25 @@ describe('deploy:fetch task', function () {
       done();
     });
   });
+
+  it('should create workspace, create repo, checkout shallow call sync, and update submodules', function (done) {
+    shipit.config.shallowClone = true;
+    shipit.config.updateSubmodules = true;
+    shipit.start('deploy:fetch', function (err) {
+      if (err) return done(err);
+      expect(shipit.local).to.be.calledWith('rm -rf /tmp/workspace');
+      expect(mkdirpMock).to.be.calledWith('/tmp/workspace');
+      expect(shipit.local).to.be.calledWith('git init', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git remote', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith(
+          'git remote add shipit git://website.com/user/repo',
+          {cwd: '/tmp/workspace'}
+      );
+      expect(shipit.local).to.be.calledWith('git fetch --depth=1 shipit -p --tags --recurse-submodules', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git submodule update --init --recursive', {cwd: '/tmp/workspace'});
+      done();
+    });
+  });
 });
