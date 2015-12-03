@@ -128,7 +128,7 @@ module.exports = function (gruntOrShipit) {
      */
 
     function reset() {
-      shipit.log('Reseting the working tree');
+      shipit.log('Resetting the working tree');
       return shipit.local(
         'git reset --hard HEAD',
         {cwd: shipit.config.workspace}
