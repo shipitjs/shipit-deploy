@@ -96,7 +96,8 @@ module.exports = function (gruntOrShipit) {
       var fetchCommand = 'git fetch' +
         (shipit.config.shallowClone ? ' --depth=1 ' : ' ') +
         'shipit --prune';
-      fetchCommand = fetchCommand + ' && ' + fetchCommand + ' --tags';
+      // fetch branches and tags separate to be compatible with git versions < 1.9
+      fetchCommand += ' && ' + fetchCommand + ' "refs/tags/*:refs/tags/*"';
 
       shipit.log('Fetching repository "%s"', shipit.config.repositoryUrl);
 
