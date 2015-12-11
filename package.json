@@ -25,12 +25,13 @@
   },
   "homepage": "https://github.com/shipitjs/shipit-deploy",
   "devDependencies": {
-    "chai": "^2.1.2",
+    "bluebird": "^3.0.6",
+    "chai": "^3.4.1",
     "mocha": "^2.1.0",
     "rewire": "^2.1.4",
-    "shipit-cli": "^1.0.0",
+    "shipit-cli": "^1.4.1",
     "sinon": "^1.12.2",
-    "sinon-as-promised": "^2.0.3",
+    "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.7.0"
   },
   "dependencies": {
