@@ -20,12 +20,14 @@ var createShipitInstance = function (conf) {
   shipit.initConfig({
     test: _.merge({
       workspace: '/tmp/workspace',
-      deployTo: '/remote/deploy'
+      deployTo: '/remote/deploy',
+      currentPath: 'current',
+      releasesPath: 'releases'
     }, conf)
   });
 
-  shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-  shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
+  shipit.currentPath = path.join(shipit.config.deployTo, shipit.config.currentPath);
+  shipit.releasesPath = path.join(shipit.config.deployTo, shipit.config.releasesPath);
 
   return shipit;
 };
