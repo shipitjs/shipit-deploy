@@ -29,10 +29,10 @@ module.exports = function (shipit) {
                 remote: false
             },
             workspace: 'shipit-build',
-            deployTo: '/home/unkle/waf_backoffice',
-            currentPath: 'content',
-            releasesPath: 'content_releases',
-            repositoryUrl: 'git@github.com:wolters-kluwer-france/waf-backoffice-content.git',
+            deployTo: '/path/to/deploy',
+            currentPath: 'documentroot',
+            releasesPath: 'releasespath',
+            repositoryUrl: 'git@github.com/user/repo.git',
             ignores: [
                 '.git',
                 'bower_components',
@@ -45,7 +45,7 @@ module.exports = function (shipit) {
             submodules: true
         },
         staging: {
-            servers: 'unkle@92.222.46.203:4701',
+            servers: 'user@server:port',
         }
     });
 };
