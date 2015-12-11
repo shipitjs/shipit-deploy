@@ -28,7 +28,7 @@ module.exports = function (gruntOrShipit) {
       if ( shipit.config.releasesPath == undefined )
         shipit.config.releasesPath = 'releases';
 
-      var relativeReleasePath = path.join('' + releasesPath + '', shipit.releaseDirname);
+      var relativeReleasePath = path.join('' + shipit.config.releasesPath + '', shipit.releaseDirname);
 
       return shipit.remote('cd ' + shipit.config.deployTo + ' && ln -nfs ' + relativeReleasePath + ' current')
       .then(function () {

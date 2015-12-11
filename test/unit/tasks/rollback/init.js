@@ -20,9 +20,7 @@ describe('rollback:init task', function () {
     shipit.initConfig({
       test: {
         workspace: '/tmp/workspace',
-        deployTo: '/remote/deploy',
-        currentPath: 'current',
-        releasesPath: 'releases',
+        deployTo: '/remote/deploy'
       }
     });
   });
