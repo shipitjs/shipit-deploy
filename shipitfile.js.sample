@@ -1,0 +1,51 @@
+module.exports = function (shipit) {
+    require('shipit-deploy')(shipit);
+    require('shipit-bower')(shipit);
+    require('shipit-npm')(shipit);
+    require('shipit-submodule')(shipit);
+
+    shipit.blTask('grunt:all', function() {
+        return shipit.local('grunt all', {cwd: shipit.config.workspace});
+    });
+
+    shipit.blTask('load:current', function() {
+        return current = '' + shipit.config.currentPath + '';
+    });
+
+    shipit.on('submodule:update', function(){
+        shipit.start('grunt:all');
+    });
+
+    shipit.on('deploy:update', function(){
+        shipit.start('load:current');
+    });
+
+    shipit.initConfig({
+        default: {
+            npm: {
+                remote: false
+            },
+            bower: {
+                remote: false
+            },
+            workspace: 'shipit-build',
+            deployTo: '/home/unkle/waf_backoffice',
+            currentPath: 'content',
+            releasesPath: 'content_releases',
+            repositoryUrl: 'git@github.com:wolters-kluwer-france/waf-backoffice-content.git',
+            ignores: [
+                '.git',
+                'bower_components',
+                'node_modules'
+            ],
+            keepReleases: 2,
+            shallowClone: true,
+            deleteOnRollback: false,
+            branch: 'release/0.1',
+            submodules: true
+        },
+        staging: {
+            servers: 'unkle@92.222.46.203:4701',
+        }
+    });
+};
