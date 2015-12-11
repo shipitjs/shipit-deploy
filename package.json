@@ -6,6 +6,11 @@
   "directories": {
     "test": "test"
   },
+  "files": [
+    "index.js",
+    "tasks",
+    "lib"
+  ],
   "scripts": {
     "test": "mocha --recursive"
   },
