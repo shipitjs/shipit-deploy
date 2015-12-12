@@ -31,11 +31,10 @@ describe('rollback:finish task', function () {
     shipit.currentPath = path.join(shipit.config.deployTo, 'current');
     shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
 
-    shipit.rollbackDirName = "20141704123137";
+    shipit.rollbackDirName = '20141704123137';
   });
 
-  describe('delete rollbacked release', function(){
-
+  describe('delete rollbacked release', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remote', function (command) {
         if (command === readLinkCommand)
@@ -56,32 +55,34 @@ describe('rollback:finish task', function () {
       shipit.remote.restore();
     });
 
-    it('undefined releases path', function(done){
+    it('undefined releases path', function (done) {
       shipit.start('rollback:finish', function (err) {
-        expect(err.message).to.equal("Can't find release to delete");
+        expect(err.message).to.equal('Can\'t find release to delete');
         done();
-      })
-    })
+      });
+    });
 
-    it('undefined previous directory name', function(done){
+    it('undefined previous directory name', function (done) {
       shipit.prevReleasePath = '/remote/deploy/releases/';
-      shipit.start('rollback:finish', function(err) {
-        expect(err.message).to.equal("Can't find release to delete");
+      shipit.start('rollback:finish', function (err) {
+        expect(err.message).to.equal('Can\'t find release to delete');
         done();
-      })
-    })
+      });
+    });
 
 
-    it('successful delete', function(done) {
+    it('successful delete', function (done) {
       // set up test specific variables
-      shipit.prevReleaseDirName = '20141704123137';
+      shipit.prevReleaseDirname = '20141704123137';
       shipit.prevReleasePath = '/remote/deploy/releases/20141704123137';
 
       var spy = sinon.spy();
       shipit.on('rollbacked', spy);
       shipit.start('rollback:finish', function (err) {
-        if (err) return done(err);
-        expect(shipit.prevReleaseDirName).to.equal('20141704123137');
+        if (err)
+          return done(err);
+
+        expect(shipit.prevReleaseDirname).to.equal('20141704123137');
         expect(shipit.remote).to.be.calledWith('rm -rf /remote/deploy/releases/20141704123137');
         expect(spy).to.be.called;
         done();
