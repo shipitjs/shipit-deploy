@@ -48,8 +48,6 @@ module.exports = function (shipit) {
   });
 };
 ```
-
-You can see an example on `shiptfile.js.sample`.
  
 To deploy on staging, you must use the following command :
 
