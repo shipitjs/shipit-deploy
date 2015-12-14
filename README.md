@@ -13,12 +13,12 @@ Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based o
 
 Pour installer la version spécifique de shipit-deploy à Wkf, vous devez :
 
-Copier coller les fichiers suivants à la racine de votre projet:
+Copier les fichiers suivants à la racine de votre projet:
 
-- [bower.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/bower.json)
-- [Gruntfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/Gruntfile.js)
-- [package.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/package.json)
-- [shipitfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/shipitfile.js)
+- [bower.json](https://github.com/wolters-kluwer-france/shipit-deploy/blob/master/wkf/bower.json)
+- [Gruntfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/blob/master/wkf/Gruntfile.js)
+- [package.json](https://github.com/wolters-kluwer-france/shipit-deploy/blob/master/wkf/package.json)
+- [shipitfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/blob/master/wkf/shipitfile.js)
 
 Vous devez alors adapter le fichier de configuration `shipitfile.js` à vos besoins.
 
@@ -46,4 +46,4 @@ shipit staging rollback
 
 ### Instruction détaillées
 
-Accéder aux instructions d'[installation spécifiques](https://github.com/wolters-kluwer-france/INSTALL.md) du module.
+Accéder aux instructions d'[installation spécifiques](https://github.com/wolters-kluwer-france/blob/master/INSTALL.md) du module.
