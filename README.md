@@ -15,16 +15,16 @@ Pour installer la version spécifique de shipit-deploy à Wkf, vous devez :
 
 Copier coller les fichiers suivants à la racine de votre projet:
 
-[bower.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/bower.json)
-[Gruntfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/Gruntfile.js)
-[package.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/package.json)
-[shipitfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/shipitfile.js)
+- [bower.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/bower.json)
+- [Gruntfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/Gruntfile.js)
+- [package.json](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/package.json)
+- [shipitfile.js](https://github.com/wolters-kluwer-france/shipit-deploy/wkf/shipitfile.js)
 
 Vous devez alors adapter le fichier de configuration `shipitfile.js` à vos besoins.
 
 Executez ensuite 
 
-``bash
+```bash
 $ npm install
 $ grunt all
 `̀
