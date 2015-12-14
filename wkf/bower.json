@@ -1,0 +1,16 @@
+{
+  "name": "waf-bo-content",
+  "version": "0.1",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
