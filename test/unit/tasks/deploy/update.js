@@ -36,19 +36,19 @@ function stubShipit(shipit) {
   sinon.stub(shipit, 'local', function (command) {
     if (command === 'git rev-parse ' + shipit.config.branch) {
       return Promise.resolve(
-        {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+        {stdout: 'cafebabea921f496c12854a53cef8d293e2b4756\n'}
       );
     }
-    else if (command === 'git rev-parse HEAD') {
+
+    if (command === 'git rev-parse HEAD') {
       return Promise.resolve(
         {stdout: 'deadbeefa921f496c12854a53cef8d293e2b4756\n'}
       );
     }
-    else {
-      return Promise.resolve(
-         {sterr: 'unknown command !\n'}
-      );
-    }
+
+    return Promise.resolve(
+      {stderr: 'error !\n'}
+    );
   });
   return shipit;
 }
@@ -61,20 +61,19 @@ function restoreShipit(shipit) {
 }
 
 describe('deploy:update task', function () {
-  var shipit;
+  var shipit, clock;
 
   beforeEach(function () {
+    clock = sinon.useFakeTimers(1397730698075, 'Date');
     shipit = createShipitInstance();
+    shipit = stubShipit(shipit);
+  });
+  afterEach(function () {
+    shipit = restoreShipit(shipit);
+    clock.restore();
   });
 
   describe('update release', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
-
     it('should create release path, and do a remote copy', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -117,12 +116,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#setPreviousRevision', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     describe('no previous revision', function () {
       it('should set shipit.previousRevision to null', function (done) {
         shipit.start('deploy:update', function (err) {
@@ -136,12 +129,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#setPreviousRelease', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     it('should set shipit.previousRelease to null when no previous release', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -166,12 +153,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#copyPreviousRelease', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     describe('no previous release', function () {
       it('should proceed with rsync', function (done) {
         shipit.start('deploy:update', function (err) {
@@ -185,12 +166,14 @@ describe('deploy:update task', function () {
 
   describe('#setCurrentRevision', function () {
     beforeEach(function () {
-      shipit = stubShipit(shipit);
       shipit.remote.restore();
       sinon.stub(shipit, 'remote', function (command) {
         if (/^if \[ \-f/.test(command)) {
           return Promise.resolve([
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+            {stdout: shipit.config.preFetched ?
+               'deadbeefa921f496c12854a53cef8d293e2b4756\n' :
+               'cafebabea921f496c12854a53cef8d293e2b4756\n'
+            }
           ]);
         }
 
@@ -212,21 +195,20 @@ describe('deploy:update task', function () {
           if(/\/.$/.test(args[args.length-2]) === false) {
             return Promise.reject(new Error("Copy folder contents, not the folder itself"));
           }
+          return Promise.resolve({stdout: ''});
         }
 
-        return Promise.resolve([{stdout: ''}]);
+        return Promise.resolve(
+          {stderr: 'error !\n'}
+        );
       });
-    });
-
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
     });
 
     context('when the workspace was fetched by shipit', function () {
       it('should set shipit.currentRevision from given branch/commitish', function (done) {
         shipit.start('deploy:update', function (err) {
           if (err) return done(err);
-          expect(shipit.currentRevision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+          expect(shipit.currentRevision).to.equal('cafebabea921f496c12854a53cef8d293e2b4756');
           done();
         });
       });
@@ -236,7 +218,7 @@ describe('deploy:update task', function () {
           if (err) return done(err);
           shipit.getRevision('20141704123137')
           .then(function(revision) {
-            expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+            expect(revision).to.equal('cafebabea921f496c12854a53cef8d293e2b4756');
             done();
           });
         });
@@ -247,7 +229,8 @@ describe('deploy:update task', function () {
       beforeEach(function() {
         shipit.config.preFetched = true; // overwrite
       });
-      it.only('should set shipit.currentRevision from HEAD commitish', function (done) {
+
+      it('should set shipit.currentRevision from HEAD commitish', function (done) {
         shipit.start('deploy:update', function (err) {
           if (err) return done(err);
           expect(shipit.currentRevision).to.equal('deadbeefa921f496c12854a53cef8d293e2b4756');
