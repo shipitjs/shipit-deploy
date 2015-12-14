@@ -27,7 +27,7 @@ Executez ensuite
 ```bash
 $ npm install
 $ grunt all
-`̀
+```
 
 ## Usage
 
