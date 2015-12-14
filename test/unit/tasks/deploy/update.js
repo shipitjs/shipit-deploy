@@ -39,6 +39,16 @@ function stubShipit(shipit) {
         {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
       );
     }
+    else if (command === 'git rev-parse HEAD') {
+      return Promise.resolve(
+        {stdout: 'deadbeefa921f496c12854a53cef8d293e2b4756\n'}
+      );
+    }
+    else {
+      return Promise.resolve(
+         {sterr: 'unknown command !\n'}
+      );
+    }
   });
   return shipit;
 }
@@ -212,21 +222,47 @@ describe('deploy:update task', function () {
       shipit = restoreShipit(shipit);
     });
 
-    it('should set shipit.currentRevision', function (done) {
-      shipit.start('deploy:update', function (err) {
-        if (err) return done(err);
-        expect(shipit.currentRevision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
-        done();
+    context('when the workspace was fetched by shipit', function () {
+      it('should set shipit.currentRevision from given branch/commitish', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.currentRevision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+          done();
+        });
+      });
+
+      it('should update remote REVISION file', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          shipit.getRevision('20141704123137')
+          .then(function(revision) {
+            expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+            done();
+          });
+        });
       });
     });
 
-    it('should update remote REVISION file', function (done) {
-      shipit.start('deploy:update', function (err) {
-        if (err) return done(err);
-        shipit.getRevision('20141704123137')
-        .then(function(revision) {
-          expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+    context('when the workspace is already fetched', function () {
+      beforeEach(function() {
+        shipit.config.preFetched = true; // overwrite
+      });
+      it.only('should set shipit.currentRevision from HEAD commitish', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.currentRevision).to.equal('deadbeefa921f496c12854a53cef8d293e2b4756');
           done();
+        });
+      });
+
+      it('should update remote REVISION file', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          shipit.getRevision('20141704123137')
+          .then(function(revision) {
+            expect(revision).to.equal('deadbeefa921f496c12854a53cef8d293e2b4756');
+            done();
+          });
         });
       });
     });

@@ -31,6 +31,9 @@ module.exports = function (gruntOrShipit) {
     .then(setCurrentRevision)
     .then(function () {
       shipit.emit('updated');
+    })
+    .catch(function(err) {
+      shipit.log('Error while fetching !', err);
     });
 
     /**
