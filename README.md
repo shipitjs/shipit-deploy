@@ -65,7 +65,11 @@ shipit staging rollback
 
 Type: `String`
 
-Define a path to an empty directory where Shipit builds it's syncing source. **Beware to not set this path to the root of your repository as shipit-deploy cleans the directory at the given path as a first step.**
+Define a path to a directory where Shipit will prepare the files to be synced to the destination servers.
+
+By default, shipit will **cleans this directory as a first step** then `git clone` a fresh code copy into it. So **Beware to not set this path to the root of your repository**.
+
+If the `preFetched` option is set, then Shipit assumes that code is already fetched and will not erase nor `git clone` into this dir. The "fetched" event will be emited immediately without any action. It is then safe to set this option to the root of your repository.
 
 ### dirToCopy
 
@@ -115,6 +119,10 @@ Number of releases to keep on the remote server.
 Type: `Boolean`
 
 Perform a shallow clone. Default: `false`.
+
+### preFetched
+
+Assume that `workspace` already contains a valid clone of desired sources and do nothing during the fetch step. See the `workspace` option above.
 
 ### gitLogFormat
 

@@ -16,6 +16,13 @@ module.exports = function (gruntOrShipit) {
   function task() {
     var shipit = utils.getShipit(gruntOrShipit);
 
+    if (shipit.config.preFetched) {
+      return Promise.resolve(true).then(function () {
+        shipit.log('Using pre-fetched workspace "%s", nothing to do.', shipit.config.workspace);
+        shipit.emit('fetched');
+      });
+    }
+    
     return createWorkspace()
     .then(initRepository)
     .then(addRemote)

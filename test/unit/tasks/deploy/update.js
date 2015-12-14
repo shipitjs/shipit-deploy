@@ -36,9 +36,19 @@ function stubShipit(shipit) {
   sinon.stub(shipit, 'local', function (command) {
     if (command === 'git rev-parse ' + shipit.config.branch) {
       return Promise.resolve(
-        {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+        {stdout: 'cafebabea921f496c12854a53cef8d293e2b4756\n'}
       );
     }
+
+    if (command === 'git rev-parse HEAD') {
+      return Promise.resolve(
+        {stdout: 'deadbeefa921f496c12854a53cef8d293e2b4756\n'}
+      );
+    }
+
+    return Promise.resolve(
+      {stderr: 'error !\n'}
+    );
   });
   return shipit;
 }
@@ -54,20 +64,16 @@ describe('deploy:update task', function () {
   var shipit, clock;
 
   beforeEach(function () {
+    clock = sinon.useFakeTimers(1397730698075, 'Date');
     shipit = createShipitInstance();
-    clock = sinon.useFakeTimers(1397730698075);
+    shipit = stubShipit(shipit);
   });
   afterEach(function () {
+    shipit = restoreShipit(shipit);
     clock.restore();
   });
 
   describe('update release', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     it('should create release path, and do a remote copy', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -79,8 +85,6 @@ describe('deploy:update task', function () {
         expect(shipit.remoteCopy).to.be.calledWith('/tmp/workspace/', '/remote/deploy/releases/' + dirName);
         done();
       });
-
-      clock.tick(5);
     });
 
     describe('dirToCopy option', function () {
@@ -102,7 +106,6 @@ describe('deploy:update task', function () {
               if (err) reject(err);
               var dirName = moment.utc().format('YYYYMMDDHHmmss');
               expect(shipit.remoteCopy).to.be.calledWith(path.res, '/remote/deploy/releases/' + dirName);
-              clock.tick(5);
               resolve()
             })
           });
@@ -113,12 +116,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#setPreviousRevision', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     describe('no previous revision', function () {
       it('should set shipit.previousRevision to null', function (done) {
         shipit.start('deploy:update', function (err) {
@@ -132,12 +129,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#setPreviousRelease', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     it('should set shipit.previousRelease to null when no previous release', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -162,12 +153,6 @@ describe('deploy:update task', function () {
   });
 
   describe('#copyPreviousRelease', function () {
-    beforeEach(function () {
-      shipit = stubShipit(shipit);
-    });
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
     describe('no previous release', function () {
       it('should proceed with rsync', function (done) {
         shipit.start('deploy:update', function (err) {
@@ -181,12 +166,14 @@ describe('deploy:update task', function () {
 
   describe('#setCurrentRevision', function () {
     beforeEach(function () {
-      shipit = stubShipit(shipit);
       shipit.remote.restore();
       sinon.stub(shipit, 'remote', function (command) {
         if (/^if \[ \-f/.test(command)) {
           return Promise.resolve([
-            {stdout: '9d63d434a921f496c12854a53cef8d293e2b4756\n'}
+            {stdout: shipit.config.preFetched ?
+               'deadbeefa921f496c12854a53cef8d293e2b4756\n' :
+               'cafebabea921f496c12854a53cef8d293e2b4756\n'
+            }
           ]);
         }
 
@@ -208,31 +195,57 @@ describe('deploy:update task', function () {
           if(/\/.$/.test(args[args.length-2]) === false) {
             return Promise.reject(new Error("Copy folder contents, not the folder itself"));
           }
+          return Promise.resolve({stdout: ''});
         }
 
-        return Promise.resolve([{stdout: ''}]);
+        return Promise.resolve(
+          {stderr: 'error !\n'}
+        );
       });
     });
 
-    afterEach(function () {
-      shipit = restoreShipit(shipit);
-    });
-
-    it('should set shipit.currentRevision', function (done) {
-      shipit.start('deploy:update', function (err) {
-        if (err) return done(err);
-        expect(shipit.currentRevision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
-        done();
-      });
-    });
-
-    it('should update remote REVISION file', function (done) {
-      shipit.start('deploy:update', function (err) {
-        if (err) return done(err);
-        shipit.getRevision('20141704123137')
-        .then(function(revision) {
-          expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
+    context('when the workspace was fetched by shipit', function () {
+      it('should set shipit.currentRevision from given branch/commitish', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.currentRevision).to.equal('cafebabea921f496c12854a53cef8d293e2b4756');
           done();
+        });
+      });
+
+      it('should update remote REVISION file', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          shipit.getRevision('20141704123137')
+          .then(function(revision) {
+            expect(revision).to.equal('cafebabea921f496c12854a53cef8d293e2b4756');
+            done();
+          });
+        });
+      });
+    });
+
+    context('when the workspace is already fetched', function () {
+      beforeEach(function() {
+        shipit.config.preFetched = true; // overwrite
+      });
+
+      it('should set shipit.currentRevision from HEAD commitish', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          expect(shipit.currentRevision).to.equal('deadbeefa921f496c12854a53cef8d293e2b4756');
+          done();
+        });
+      });
+
+      it('should update remote REVISION file', function (done) {
+        shipit.start('deploy:update', function (err) {
+          if (err) return done(err);
+          shipit.getRevision('20141704123137')
+          .then(function(revision) {
+            expect(revision).to.equal('deadbeefa921f496c12854a53cef8d293e2b4756');
+            done();
+          });
         });
       });
     });

@@ -31,6 +31,9 @@ module.exports = function (gruntOrShipit) {
     .then(setCurrentRevision)
     .then(function () {
       shipit.emit('updated');
+    })
+    .catch(function(err) {
+      shipit.log('Error while fetching !', err);
     });
 
     /**
@@ -87,7 +90,6 @@ module.exports = function (gruntOrShipit) {
 
       return shipit.getRevision(shipit.previousRelease)
       .then(function(revision) {
-
         if (revision) {
           shipit.log(chalk.green('Previous revision found.'));
           shipit.previousRevision = revision;
@@ -102,10 +104,10 @@ module.exports = function (gruntOrShipit) {
     function setPreviousRelease() {
       shipit.previousRelease = null;
       return shipit.getCurrentReleaseDirname()
-      .then(function(currentReleasseDirname) {
-        if (currentReleasseDirname) {
+      .then(function(currentReleaseDirname) {
+        if (currentReleaseDirname) {
           shipit.log(chalk.green('Previous release found.'));
-          shipit.previousRelease = currentReleasseDirname;
+          shipit.previousRelease = currentReleaseDirname;
         }
       });
     }
@@ -117,7 +119,8 @@ module.exports = function (gruntOrShipit) {
     function setCurrentRevision() {
       shipit.log('Setting current revision and creating revision file.');
 
-      return shipit.local('git rev-parse ' + shipit.config.branch, {cwd: shipit.config.workspace}).then(function(response) {
+      var cmd = 'git rev-parse ' + (shipit.config.preFetched ? 'HEAD' : shipit.config.branch);
+      return shipit.local(cmd, { cwd: shipit.config.workspace }).then(function(response) {
         shipit.currentRevision = response.stdout.trim();
         return shipit.remote('echo "' + shipit.currentRevision + '" > ' + path.join(shipit.releasePath, 'REVISION'));
       }).then(function() {
