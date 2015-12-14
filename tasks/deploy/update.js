@@ -87,7 +87,6 @@ module.exports = function (gruntOrShipit) {
 
       return shipit.getRevision(shipit.previousRelease)
       .then(function(revision) {
-
         if (revision) {
           shipit.log(chalk.green('Previous revision found.'));
           shipit.previousRevision = revision;
@@ -102,10 +101,10 @@ module.exports = function (gruntOrShipit) {
     function setPreviousRelease() {
       shipit.previousRelease = null;
       return shipit.getCurrentReleaseDirname()
-      .then(function(currentReleasseDirname) {
-        if (currentReleasseDirname) {
+      .then(function(currentReleaseDirname) {
+        if (currentReleaseDirname) {
           shipit.log(chalk.green('Previous release found.'));
-          shipit.previousRelease = currentReleasseDirname;
+          shipit.previousRelease = currentReleaseDirname;
         }
       });
     }

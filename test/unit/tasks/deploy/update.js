@@ -51,14 +51,10 @@ function restoreShipit(shipit) {
 }
 
 describe('deploy:update task', function () {
-  var shipit, clock;
+  var shipit;
 
   beforeEach(function () {
     shipit = createShipitInstance();
-    clock = sinon.useFakeTimers(1397730698075);
-  });
-  afterEach(function () {
-    clock.restore();
   });
 
   describe('update release', function () {
@@ -68,6 +64,7 @@ describe('deploy:update task', function () {
     afterEach(function () {
       shipit = restoreShipit(shipit);
     });
+
     it('should create release path, and do a remote copy', function (done) {
       shipit.start('deploy:update', function (err) {
         if (err) return done(err);
@@ -79,8 +76,6 @@ describe('deploy:update task', function () {
         expect(shipit.remoteCopy).to.be.calledWith('/tmp/workspace/', '/remote/deploy/releases/' + dirName);
         done();
       });
-
-      clock.tick(5);
     });
 
     describe('dirToCopy option', function () {
@@ -102,7 +97,6 @@ describe('deploy:update task', function () {
               if (err) reject(err);
               var dirName = moment.utc().format('YYYYMMDDHHmmss');
               expect(shipit.remoteCopy).to.be.calledWith(path.res, '/remote/deploy/releases/' + dirName);
-              clock.tick(5);
               resolve()
             })
           });
