@@ -1,0 +1,12 @@
+{
+  "name": "waf-backoffice-content",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "shipit": "^0.7.4",
+    "shipit-bower": "^0.2.1",
+    "shipit-deploy": "https://github.com/wolters-kluwer-france/shipit-deploy",
+    "shipit-npm": "^0.2.0",
+    "shipit-submodule": "^1.0.0"
+  }
+}

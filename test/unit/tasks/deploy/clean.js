@@ -17,11 +17,12 @@ describe('deploy:clean task', function () {
     // Shipit config.
     shipit.initConfig({
       test: {
-        keepReleases: 5
+        keepReleases: 5,
+        releasesPath: 'releases'
       }
     });
 
-    shipit.releasesPath = '/remote/deploy/releases';
+    shipit.releasesPath = '/remote/deploy/' + shipit.config.releasesPath;
 
     sinon.stub(shipit, 'remote').resolves();
   });
