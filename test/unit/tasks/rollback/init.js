@@ -20,7 +20,9 @@ describe('rollback:init task', function () {
     shipit.initConfig({
       test: {
         workspace: '/tmp/workspace',
-        deployTo: '/remote/deploy'
+        deployTo: '/remote/deploy',
+        currentPath: 'current',
+        releasesPath: 'releases'
       }
     });
   });
@@ -31,8 +33,8 @@ describe('rollback:init task', function () {
         sinon.stub(shipit, 'remote', function (command) {
           if (command === readLinkCommand)
             return Promise.resolve([
-              {stdout: '/remote/deploy/releases/20141704123138'},
-              {stdout: '/remote/deploy/releases/20141704123137'}
+              {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123138'},
+              {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123137'}
             ]);
         });
       });
@@ -76,9 +78,9 @@ describe('rollback:init task', function () {
         sinon.stub(shipit, 'remote', function (command) {
           if (command === readLinkCommand)
             return Promise.resolve([
-              {stdout: '/remote/deploy/releases/20141704123137'}
+              {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123137'}
             ]);
-          if (command === 'ls -r1 /remote/deploy/releases')
+          if (command === 'ls -r1 /remote/deploy/' + shipit.config.releasesPath + '')
             return Promise.resolve([
               {stdout: '20141704123137\n20141704123134\n'},
               {stdout: '20141704123137\n20141704123133\n'}
@@ -103,9 +105,9 @@ describe('rollback:init task', function () {
         sinon.stub(shipit, 'remote', function (command) {
           if (command === readLinkCommand)
             return Promise.resolve([
-              {stdout: '/remote/deploy/releases/20141704123137'}
+              {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123137'}
             ]);
-          if (command === 'ls -r1 /remote/deploy/releases')
+          if (command === 'ls -r1 /remote/deploy/' + shipit.config.releasesPath + '')
             return Promise.resolve([]);
         });
       });
@@ -128,9 +130,9 @@ describe('rollback:init task', function () {
       sinon.stub(shipit, 'remote', function (command) {
         if (command === readLinkCommand)
           return Promise.resolve([
-            {stdout: '/remote/deploy/releases/20141704123137'}
+            {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123137'}
           ]);
-        if (command === 'ls -r1 /remote/deploy/releases')
+        if (command === 'ls -r1 /remote/deploy/' + shipit.config.releasesPath + '')
           return Promise.resolve([
             {stdout: '20141704123137'}
           ]);
@@ -154,9 +156,9 @@ describe('rollback:init task', function () {
       sinon.stub(shipit, 'remote', function (command) {
         if (command === readLinkCommand)
           return Promise.resolve([
-            {stdout: '/remote/deploy/releases/20141704123137\n'}
+            {stdout: '/remote/deploy/' + shipit.config.releasesPath + '/20141704123137\n'}
           ]);
-        if (command === 'ls -r1 /remote/deploy/releases')
+        if (command === 'ls -r1 /remote/deploy/' + shipit.config.releasesPath + '')
           return Promise.resolve([
             {stdout: '20141704123137\n20141704123136\n'}
           ]);
@@ -171,11 +173,11 @@ describe('rollback:init task', function () {
       shipit.start('rollback:init', function (err) {
         if (err) return done(err);
         expect(shipit.currentPath).to.equal('/remote/deploy/current');
-        expect(shipit.releasesPath).to.equal('/remote/deploy/releases');
+        expect(shipit.releasesPath).to.equal('/remote/deploy/' + shipit.config.releasesPath + '');
         expect(shipit.remote).to.be.calledWith(readLinkCommand);
-        expect(shipit.remote).to.be.calledWith('ls -r1 /remote/deploy/releases');
+        expect(shipit.remote).to.be.calledWith('ls -r1 /remote/deploy/' + shipit.config.releasesPath + '');
         expect(shipit.releaseDirname).to.equal('20141704123136');
-        expect(shipit.releasePath).to.equal('/remote/deploy/releases/20141704123136');
+        expect(shipit.releasePath).to.equal('/remote/deploy/' + shipit.config.releasesPath + '/20141704123136');
         done();
       });
     });
