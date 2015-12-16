@@ -41,7 +41,7 @@ module.exports = function (shipit) {
       shallowClone: true
     },
     staging: {
-      servers: 'user@myserver.com'
+      servers: 'user@myserver.com:port'
     }
   });
 };
