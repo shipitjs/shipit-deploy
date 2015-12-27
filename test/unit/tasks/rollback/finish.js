@@ -22,14 +22,16 @@ describe('rollback:finish task', function () {
       test: {
         workspace: '/tmp/workspace',
         deployTo: '/remote/deploy',
+        currentPath: 'current',
+        releasesPath: 'releases',
         deleteOnRollback: false
       }
     });
 
     shipit.releasePath = '/remote/deploy/releases/20141704123137';
     shipit.releaseDirname = '20141704123137';
-    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
+    shipit.currentPath = path.join(shipit.config.deployTo, shipit.config.currentPath);
+    shipit.releasesPath = path.join(shipit.config.deployTo, shipit.config.releasesPath);
 
     shipit.rollbackDirName = '20141704123137';
   });

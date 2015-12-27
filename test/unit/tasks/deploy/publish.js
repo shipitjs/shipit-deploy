@@ -19,14 +19,16 @@ describe('deploy:publish task', function () {
     // Shipit config
     shipit.initConfig({
       test: {
-        deployTo: '/remote/deploy'
+        deployTo: '/remote/deploy',
+        currentPath: 'current',
+        releasesPath: 'releases'
       }
     });
 
     shipit.releasePath = '/remote/deploy/releases/20141704123138';
     shipit.releaseDirname = '20141704123138';
-    shipit.currentPath = path.join(shipit.config.deployTo, 'current');
-    shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
+    shipit.currentPath = path.join(shipit.config.deployTo, shipit.config.currentPath);
+    shipit.releasesPath = path.join(shipit.config.deployTo, shipit.config.releasesPath);
 
     sinon.stub(shipit, 'remote').resolves();
   });
