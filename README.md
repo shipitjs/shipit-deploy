@@ -104,6 +104,12 @@ Type: `Boolean`
 
 Whether or not to delete the old release when rolling back to a previous release.
 
+#### key
+
+Type: `String`
+
+Path to SSH key
+
 ### keepReleases
 
 Type: `Number`
