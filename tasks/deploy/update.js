@@ -42,7 +42,7 @@ module.exports = function (gruntOrShipit) {
         return Promise.resolve();
       }
       shipit.log('Copy previous release to "%s"', shipit.releasePath);
-      return shipit.remote(util.format('cp -a %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
+      return shipit.remote(util.format('cp -r %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
     }
 
     /**
