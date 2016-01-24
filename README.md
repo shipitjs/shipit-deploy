@@ -21,6 +21,8 @@ Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based o
 npm install shipit-deploy
 ```
 
+If you are deploying from Windows, you may want to have a look at the [wiki page about usage in Windows](https://github.com/shipitjs/shipit-deploy/wiki/Deploying-from-Windows).
+
 ## Usage
 
 ### Example `shipitfile.js`
@@ -127,6 +129,12 @@ Perform a shallow clone. Default: `false`.
 Type: `String`
 
 Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
+
+### rsyncDrive
+
+Type: `String` *Optional*
+
+When deploying from Windows, set that to the drive letter containing the workspace folder. For example `/d` if your workspace is located in `d:\tmp\workspace`.
 
 ## Variables
 
