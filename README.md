@@ -128,6 +128,12 @@ Type: `String`
 
 Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
 
+### copy
+
+Type: `String`
+
+Parameter to pass to `cp` to copy the previous release. Non NTFS filesystems support `-r`. Default: `-a`
+
 ## Variables
 
 Several variables are attached during the deploy and the rollback process:
