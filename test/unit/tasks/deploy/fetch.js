@@ -23,7 +23,9 @@ describe('deploy:fetch task', function () {
     shipit.initConfig({
       test: {
         workspace: '/tmp/workspace',
-        repositoryUrl: 'git://website.com/user/repo'
+        repositoryUrl: 'git://website.com/user/repo',
+        currentPath: 'current',
+        releasesPath: 'releases'
       }
     });
 
