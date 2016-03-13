@@ -19,11 +19,12 @@ describe('pending:log task', function () {
     // Shipit config
     shipit.initConfig({
       test: {
-        deployTo: '/remote/deploy'
+        deployTo: '/remote/deploy',
+        releasesPath: 'releases'
       }
     });
 
-    shipit.releasePath = '/remote/deploy/releases/20141704123138';
+    shipit.releasePath = '/remote/deploy/' + shipit.config.releasesPath+ '/20141704123138';
     shipit.releaseDirname = '20141704123138';
 
     sinon.stub(shipit, 'remote').resolves();

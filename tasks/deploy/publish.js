@@ -25,9 +25,12 @@ module.exports = function (gruntOrShipit) {
     function updateSymbolicLink() {
       shipit.log('Publishing release "%s"', shipit.releasePath);
 
-      var relativeReleasePath = path.join('releases', shipit.releaseDirname);
+      if ( shipit.config.currentPath == undefined )
+        shipit.config.currentPath = 'current';
 
-      return shipit.remote('cd ' + shipit.config.deployTo + ' && ln -nfs ' + relativeReleasePath + ' current')
+      var relativeReleasePath = path.join(shipit.releasesPath, shipit.releaseDirname);
+
+      return shipit.remote('cd ' + shipit.config.deployTo + ' && ln -nfs ' + relativeReleasePath + ' ' + shipit.config.currentPath + '')
       .then(function () {
         shipit.log(chalk.green('Release published.'));
       });

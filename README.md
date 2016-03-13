@@ -33,6 +33,8 @@ module.exports = function (shipit) {
     default: {
       workspace: '/tmp/github-monitor',
       deployTo: '/tmp/deploy_to',
+      currentPath: 'mycurrentpath',
+      releasesPath: 'myreleasespath',
       repositoryUrl: 'https://github.com/user/repo.git',
       ignores: ['.git', 'node_modules'],
       keepReleases: 2,
@@ -41,7 +43,7 @@ module.exports = function (shipit) {
       shallowClone: true
     },
     staging: {
-      servers: 'user@myserver.com'
+      servers: 'user@myserver.com:port'
     }
   });
 };
@@ -78,7 +80,21 @@ Define directory within the workspace which should be deployed.
 
 Type: `String`
 
-Define the remote path where the project will be deployed. A directory `releases` is automatically created. A symlink `current` is linked to the current release.
+Define the remote path where the project will be deployed. A directory `releasesPath` is automatically created. A symlink `currentPath` is linked to the current release.
+
+### currentPath
+
+Type: `String`
+Optional: default is `current`
+
+Define the document root where the project will be deployed.
+
+### releasesPath
+
+Type: `String`
+Optional: default is `releases`
+
+Define the repository where the releases are stored.
 
 ### repositoryUrl
 
@@ -170,7 +186,7 @@ The complete release path : `path.join(shipit.releasesPath, shipit.releaseDirnam
 
 Attached during `deploy:init`, `rollback:init`, and `pending:log` tasks.
 
-The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
+The current symlink path : `path.join(shipit.config.deployTo, shipit.config.currentPath)`.
 
 ## Workflow tasks
 
