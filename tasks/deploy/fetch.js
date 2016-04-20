@@ -23,6 +23,7 @@ module.exports = function (gruntOrShipit) {
     .then(checkout)
     .then(reset)
     .then(merge)
+    .then(updateSubmodules)
     .then(function () {
       shipit.emit('fetched');
     });
@@ -171,6 +172,26 @@ module.exports = function (gruntOrShipit) {
       .then(function () {
         shipit.log(chalk.green('Branch merged.'));
       });
+    }
+
+    /**
+     * update submodules
+     */
+
+    function updateSubmodules() {
+
+      if (!shipit.config.updateSubmodules) {
+        return Promise.resolve();
+      }
+
+      shipit.log('Updating submodules.');
+      return shipit.local(
+          'git submodule update --init --recursive',
+          {cwd: shipit.config.workspace}
+          )
+          .then(function () {
+            shipit.log(chalk.green('Submodules updated'));
+          });
     }
   }
 };
