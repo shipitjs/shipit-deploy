@@ -48,8 +48,8 @@ module.exports = function (gruntOrShipit) {
           shipit.releaseDirname = releases[rollbackReleaseIndex];
 
           // Save the previous release in case we need to delete it later
-          shipit.prevReleaseDirName = releases[currentReleaseIndex];
-          shipit.prevReleasePath = path.join(shipit.releasesPath, shipit.prevReleaseDirName);
+          shipit.prevReleaseDirname = releases[currentReleaseIndex];
+          shipit.prevReleasePath = path.join(shipit.releasesPath, shipit.prevReleaseDirname);
 
           shipit.log('Will rollback to %s.', shipit.releaseDirname);
 

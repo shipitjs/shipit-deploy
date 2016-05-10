@@ -106,6 +106,12 @@ Type: `Boolean`
 
 Whether or not to delete the old release when rolling back to a previous release.
 
+#### key
+
+Type: `String`
+
+Path to SSH key
+
 ### keepReleases
 
 Type: `Number`
@@ -118,6 +124,12 @@ Type: `Boolean`
 
 Perform a shallow clone. Default: `false`.
 
+###updateSubmodules
+
+Type: Boolean
+
+Update submodules. Default: `false`.
+
 ### gitLogFormat
 
 Type: `String`
@@ -129,6 +141,12 @@ Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_format
 Type: `String` *Optional*
 
 When deploying from Windows, set that to the drive letter containing the workspace folder. For example `/d` if your workspace is located in `d:\tmp\workspace`.
+
+### copy
+
+Type: `String`
+
+Parameter to pass to `cp` to copy the previous release. Non NTFS filesystems support `-r`. Default: `-a`
 
 ## Variables
 
@@ -191,6 +209,8 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
   - deploy:clean
     - Remove old releases.
     - Emit event "cleaned".
+  - deploy:finish
+    - Emit event "deployed".
 - rollback
   - rollback:init
     - Define release path.
