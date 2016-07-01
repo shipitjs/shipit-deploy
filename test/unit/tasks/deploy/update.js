@@ -110,6 +110,23 @@ describe('deploy:update task', function () {
       })
     });
 
+    describe('remoteCopy option', function () {
+      it('should accept rsync options', function () {
+        return new Promise(function (resolve, reject) {
+          var shipit = stubShipit(createShipitInstance({
+            deploy: {remoteCopy: {rsync: '--foo'}}
+          }));
+          shipit.start('deploy:update', function (err) {
+            if (err) reject(err);
+            var dirName = moment.utc().format('YYYYMMDDHHmmss');
+            expect(shipit.remoteCopy).to.be.calledWith('/tmp/workspace/', '/remote/deploy/releases/' + dirName, {rsync: '--foo'});
+            clock.tick(5);
+            resolve()
+          })
+        });
+      })
+    });
+
   });
 
   describe('#setPreviousRevision', function () {
