@@ -35,10 +35,10 @@ module.exports = function (gruntOrShipit) {
         'echo \"ERR: could not make symlink\"; ' +
         'fi'
       )
-      .then(function (result) {
-        var failedresult = result.filter(function(r) {
-          return r.stdout.indexOf('could not make symlink') > -1;
-        });
+      .then(function (res) {
+        var failedresult = res ? res.stdout.filter(function(r) {
+          return r.indexOf('could not make symlink') > -1;
+        }) : [];
         if(failedresult.length && failedresult.length > 0) {
           shipit.log(chalk.yellow('Symbolic link at remote not made, as something already exists at ' + path(shipit.config.deployTo, 'current')));
         }
