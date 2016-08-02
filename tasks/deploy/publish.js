@@ -30,9 +30,10 @@ module.exports = function (gruntOrShipit) {
       return shipit.remote(
         'cd ' + shipit.config.deployTo + ' && ' +
         'if [[ -d current && ! (-L current) ]]; then ' +
-        'ln -nfs ' + relativeReleasePath + ' current;' +
-        'else ' +
         'echo \"ERR: could not make symlink\"; ' +
+        'else ' +
+        'ln -nfs ' + relativeReleasePath + ' current_tmp && ' +
+        'mv -fT current_tmp current; ' +
         'fi'
       )
       .then(function (res) {
