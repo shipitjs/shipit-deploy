@@ -128,7 +128,11 @@ Type: Boolean
 
 Update submodules. Default: `false`.
 
+### gitConfig
 
+type: `Object`
+
+Custom git configuration settings for the cloned repo.
 
 ### gitLogFormat
 
