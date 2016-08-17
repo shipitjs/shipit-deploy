@@ -6,6 +6,7 @@ var utils = require('shipit-utils');
  * - deploy:update
  * - deploy:publish
  * - deploy:clean
+ * - deploy:finish
  */
 
 module.exports = function (gruntOrShipit) {
@@ -14,12 +15,14 @@ module.exports = function (gruntOrShipit) {
   require('./update')(gruntOrShipit);
   require('./publish')(gruntOrShipit);
   require('./clean')(gruntOrShipit);
+  require('./finish')(gruntOrShipit);
 
   utils.registerTask(gruntOrShipit, 'deploy', [
     'deploy:init',
     'deploy:fetch',
     'deploy:update',
     'deploy:publish',
-    'deploy:clean'
+    'deploy:clean',
+    'deploy:finish'
   ]);
 };

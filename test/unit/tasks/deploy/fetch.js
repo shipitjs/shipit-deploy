@@ -47,7 +47,7 @@ describe('deploy:fetch task', function () {
         'git remote add shipit git://website.com/user/repo',
         {cwd: '/tmp/workspace'}
       );
-      expect(shipit.local).to.be.calledWith('git fetch shipit -p', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git fetch shipit --prune && git fetch shipit --prune "refs/tags/*:refs/tags/*"', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
       done();
@@ -67,9 +67,29 @@ describe('deploy:fetch task', function () {
         'git remote add shipit git://website.com/user/repo',
         {cwd: '/tmp/workspace'}
       );
-      expect(shipit.local).to.be.calledWith('git fetch --depth=1 shipit -p', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git fetch shipit --prune --depth=1 && git fetch shipit --prune "refs/tags/*:refs/tags/*"', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
+      done();
+    });
+  });
+
+  it('should create workspace, create repo, checkout and call sync, update submodules', function (done) {
+    shipit.config.updateSubmodules = true;
+
+    shipit.start('deploy:fetch', function (err) {
+      if (err) return done(err);
+      expect(mkdirpMock).to.be.calledWith('/tmp/workspace');
+      expect(shipit.local).to.be.calledWith('git init', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git remote', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith(
+          'git remote add shipit git://website.com/user/repo',
+          {cwd: '/tmp/workspace'}
+      );
+      expect(shipit.local).to.be.calledWith('git fetch shipit --prune && git fetch shipit --prune "refs/tags/*:refs/tags/*"', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
+      expect(shipit.local).to.be.calledWith('git submodule update --init --recursive', {cwd: '/tmp/workspace'});
       done();
     });
   });

@@ -1,6 +1,6 @@
 # shipit-deploy
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/shipitjs/shipit-deploy.svg?branch=master)](https://travis-ci.org/shipitjs/shipit-deploy)
 [![Dependency Status](https://david-dm.org/shipitjs/shipit-deploy.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy)
@@ -36,6 +36,7 @@ module.exports = function (shipit) {
       repositoryUrl: 'https://github.com/user/repo.git',
       ignores: ['.git', 'node_modules'],
       keepReleases: 2,
+      deleteOnRollback: false,
       key: '/path/to/key',
       shallowClone: true
     },
@@ -64,14 +65,14 @@ shipit staging rollback
 
 Type: `String`
 
-Define the local working path of the project deployed.
+Define a path to an empty directory where Shipit builds it's syncing source. **Beware to not set this path to the root of your repository as shipit-deploy cleans the directory at the given path as a first step.**
 
 ### dirToCopy
 
 Type: `String`
 Default: same as workspace
 
-Define directory within the workspace which should be deployed. 
+Define directory within the workspace which should be deployed.
 
 ### deployTo
 
@@ -97,6 +98,18 @@ Type: `Array<String>`
 
 An array of paths that match ignored files. These paths are used in the rsync command.
 
+### deleteOnRollback
+
+Type: `Boolean`
+
+Whether or not to delete the old release when rolling back to a previous release.
+
+#### key
+
+Type: `String`
+
+Path to SSH key
+
 ### keepReleases
 
 Type: `Number`
@@ -109,11 +122,25 @@ Type: `Boolean`
 
 Perform a shallow clone. Default: `false`.
 
+###updateSubmodules
+
+Type: Boolean
+
+Update submodules. Default: `false`.
+
+
+
 ### gitLogFormat
 
 Type: `String`
 
 Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
+
+### copy
+
+Type: `String`
+
+Parameter to pass to `cp` to copy the previous release. Non NTFS filesystems support `-r`. Default: `-a`
 
 ## Variables
 
@@ -121,7 +148,7 @@ Several variables are attached during the deploy and the rollback process:
 
 ### shipit.config.*
 
-All options describe in the config sections are avalaible in the `shipit.config` object.
+All options described in the config sections are available in the `shipit.config` object.
 
 ### shipit.repository
 
@@ -176,6 +203,8 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
   - deploy:clean
     - Remove old releases.
     - Emit event "cleaned".
+  - deploy:finish
+    - Emit event "deployed".
 - rollback
   - rollback:init
     - Define release path.

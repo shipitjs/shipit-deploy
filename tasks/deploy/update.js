@@ -38,10 +38,12 @@ module.exports = function (gruntOrShipit) {
      */
 
     function copyPreviousRelease() {
+      var copyParameter = shipit.config.copy || '-a';
       if (!shipit.previousRelease) {
         return Promise.resolve();
       }
-      return shipit.remote(util.format('cp -a %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
+      shipit.log('Copy previous release to "%s"', shipit.releasePath);
+      return shipit.remote(util.format('cp %s %s/. %s', copyParameter, path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
     }
 
     /**
@@ -65,9 +67,11 @@ module.exports = function (gruntOrShipit) {
 
     function remoteCopy() {
       var uploadDirPath = path.resolve(shipit.config.workspace, shipit.config.dirToCopy || '');
+      var options = _.get(shipit.config, 'deploy.remoteCopy') || {rsync: '--del'};
 
       shipit.log('Copy project to remote servers.');
-      return shipit.remoteCopy(uploadDirPath + '/', shipit.releasePath, {rsync: '--del'})
+
+      return shipit.remoteCopy(uploadDirPath + '/', shipit.releasePath, options)
       .then(function () {
         shipit.log(chalk.green('Finished copy.'));
       });
@@ -100,11 +104,11 @@ module.exports = function (gruntOrShipit) {
 
     function setPreviousRelease() {
       shipit.previousRelease = null;
-      return shipit.getPreviousReleaseDirname()
-      .then(function(previousReleaseDir) {
-        if (previousReleaseDir) {
+      return shipit.getCurrentReleaseDirname()
+      .then(function(currentReleasseDirname) {
+        if (currentReleasseDirname) {
           shipit.log(chalk.green('Previous release found.'));
-          shipit.previousRelease = previousReleaseDir;
+          shipit.previousRelease = currentReleasseDirname;
         }
       });
     }

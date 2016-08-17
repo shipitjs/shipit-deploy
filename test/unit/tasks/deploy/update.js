@@ -6,7 +6,7 @@ var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var updateFactory = require('../../../../tasks/deploy/update');
 var Promise = require('bluebird');
-var path = require('path');
+var path = require('path2/posix');
 
 var createShipitInstance = function (conf) {
   var shipit = new Shipit({
@@ -110,6 +110,23 @@ describe('deploy:update task', function () {
       })
     });
 
+    describe('remoteCopy option', function () {
+      it('should accept rsync options', function () {
+        return new Promise(function (resolve, reject) {
+          var shipit = stubShipit(createShipitInstance({
+            deploy: {remoteCopy: {rsync: '--foo'}}
+          }));
+          shipit.start('deploy:update', function (err) {
+            if (err) reject(err);
+            var dirName = moment.utc().format('YYYYMMDDHHmmss');
+            expect(shipit.remoteCopy).to.be.calledWith('/tmp/workspace/', '/remote/deploy/releases/' + dirName, {rsync: '--foo'});
+            clock.tick(5);
+            resolve()
+          })
+        });
+      })
+    });
+
   });
 
   describe('#setPreviousRevision', function () {
@@ -138,13 +155,25 @@ describe('deploy:update task', function () {
     afterEach(function () {
       shipit = restoreShipit(shipit);
     });
-    describe('no previous release', function () {
-      it('should set shipit.previousRelease to null', function (done) {
-        shipit.start('deploy:update', function (err) {
-          if (err) return done(err);
-          expect(shipit.previousRelease).to.equal(null);
-          done();
-        });
+    it('should set shipit.previousRelease to null when no previous release', function (done) {
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        expect(shipit.previousRelease).to.equal(null);
+        done();
+      });
+    });
+
+    it('should set shipit.previousRelease to (still) current release when one release exist', function (done) {
+      shipit.remote.restore();
+      sinon.stub(shipit, 'remote', function (command) {
+        return Promise.resolve([
+          {stdout: '20141704123137\n'}
+        ]);
+      });
+      shipit.start('deploy:update', function (err) {
+        if (err) return done(err);
+        expect(shipit.previousRelease).to.equal('20141704123137');
+        done();
       });
     });
   });
