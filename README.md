@@ -136,11 +136,12 @@ Type: `String`
 
 Log format to pass to [`git log`](http://git-scm.com/docs/git-log#_pretty_formats). Used to display revision diffs in `pending` task. Default: `%h: %s - %an`.
 
-### rsyncDrive
+### rsyncFrom
 
 Type: `String` *Optional*
 
-When deploying from Windows, set that to the drive letter containing the workspace folder. For example `/d` if your workspace is located in `d:\tmp\workspace`.
+When deploying from Windows, prepend the workspace path with the drive letter. For example `/d/tmp/workspace` if your workspace is located in `d:\tmp\workspace`.
+By default, it will run rsync from the workspace folder.
 
 ### copy
 
