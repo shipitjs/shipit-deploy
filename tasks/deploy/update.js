@@ -67,10 +67,8 @@ module.exports = function (gruntOrShipit) {
 
     function remoteCopy() {
       var options = _.get(shipit.config, 'deploy.remoteCopy') || {rsync: '--del'};
-      var uploadDirPath = path.resolve(shipit.config.workspace, shipit.config.dirToCopy || '');
-	  if (typeof shipit.config.rsyncFrom!=='undefined') {
-	    uploadDirPath = path.resolve(shipit.config.rsyncFrom, shipit.config.dirToCopy || '');
-	  }
+      var rsyncFrom = shipit.config.rsyncFrom || shipit.config.workspace;
+      var uploadDirPath = path.resolve(rsyncFrom, shipit.config.dirToCopy || '');
 
       shipit.log('Copy project to remote servers.');
 
