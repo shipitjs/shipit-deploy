@@ -18,7 +18,7 @@ module.exports = function (gruntOrShipit) {
 
     return createWorkspace()
     .then(initRepository)
-    .then(setConfig)
+    .then(setGitConfig)
     .then(addRemote)
     .then(fetch)
     .then(checkout)
@@ -64,11 +64,16 @@ module.exports = function (gruntOrShipit) {
     }
 
     /**
-     * Set config.
+     * Set git config.
      */
 
-    function setConfig() {
+    function setGitConfig() {
+      if (!shipit.config.gitConfig) {
+        return Promise.resolve();
+      }
+
       shipit.log('Set custom git config options for "%s"', shipit.config.workspace);
+
       return Promise.all(Object.keys(shipit.config.gitConfig || {}).map(function (key, gitConfig) {
         return shipit.local(
           'git config ' + key + ' "' + shipit.config.gitConfig[key] + '"',
@@ -76,7 +81,7 @@ module.exports = function (gruntOrShipit) {
         );
       }))
       .then(function () {
-        shipit.log(chalk.green('Config set.'));
+        shipit.log(chalk.green('Git config set.'));
       });
     }
 
