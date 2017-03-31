@@ -106,7 +106,7 @@ Type: `Boolean`
 
 Whether or not to delete the old release when rolling back to a previous release.
 
-#### key
+### key
 
 Type: `String`
 
@@ -124,7 +124,7 @@ Type: `Boolean`
 
 Perform a shallow clone. Default: `false`.
 
-###updateSubmodules
+### updateSubmodules
 
 Type: Boolean
 
