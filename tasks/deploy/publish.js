@@ -27,8 +27,23 @@ module.exports = function (gruntOrShipit) {
 
       var relativeReleasePath = path.join('releases', shipit.releaseDirname);
 
-      return shipit.remote('cd ' + shipit.config.deployTo + ' && ln -nfs ' + relativeReleasePath + ' current')
-      .then(function () {
+      return shipit.remote(
+        'cd ' + shipit.config.deployTo + ' && ' +
+        'if [[ -d current && ! (-L current) ]]; then ' +
+        'echo \"ERR: could not make symlink\"; ' +
+        'else ' +
+        'ln -nfs ' + relativeReleasePath + ' current_tmp && ' +
+        'mv -fT current_tmp current; ' +
+        'fi'
+      )
+      .then(function (res) {
+        var failedresult = res ? res.stdout.filter(function(r) {
+          return r.indexOf('could not make symlink') > -1;
+        }) : [];
+        if(failedresult.length && failedresult.length > 0) {
+          shipit.log(chalk.yellow('Symbolic link at remote not made, as something already exists at ' + path(shipit.config.deployTo, 'current')));
+        }
+
         shipit.log(chalk.green('Release published.'));
       });
     }

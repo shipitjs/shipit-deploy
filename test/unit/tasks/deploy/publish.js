@@ -39,7 +39,7 @@ describe('deploy:publish task', function () {
     shipit.start('deploy:publish', function (err) {
       if (err) return done(err);
       expect(shipit.currentPath).to.equal('/remote/deploy/current');
-      expect(shipit.remote).to.be.calledWith('cd /remote/deploy && ln -nfs releases/20141704123138 current');
+      expect(shipit.remote).to.be.calledWith('cd /remote/deploy && if [[ -d current && ! (-L current) ]]; then echo "ERR: could not make symlink"; else ln -nfs releases/20141704123138 current_tmp && mv -fT current_tmp current; fi');
       done();
     });
   });
