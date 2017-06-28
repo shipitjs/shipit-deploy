@@ -37,7 +37,7 @@ module.exports = function (gruntOrShipit) {
         'fi'
       )
       .then(function (res) {
-        var failedresult = res ? res.stdout.filter(function(r) {
+        var failedresult = (res && res.stdout) ? res.stdout.filter(function(r) {
           return r.indexOf('could not make symlink') > -1;
         }) : [];
         if(failedresult.length && failedresult.length > 0) {
