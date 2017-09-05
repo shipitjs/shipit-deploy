@@ -39,7 +39,7 @@ module.exports = function (gruntOrShipit) {
 
     function copyPreviousRelease() {
       var copyParameter = shipit.config.copy || '-a';
-      if (!shipit.previousRelease) {
+      if (!shipit.previousRelease || shipit.config.copy === false) {
         return Promise.resolve();
       }
       shipit.log('Copy previous release to "%s"', shipit.releasePath);
