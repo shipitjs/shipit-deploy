@@ -59,7 +59,7 @@ describe('deploy:fetch task', function () {
 
     shipit.start('deploy:fetch', function (err) {
       if (err) return done(err);
-      expect(shipit.local).to.be.calledWith('rm -rf /tmp/workspace');
+      expect(shipit.local).to.be.calledWith('rm -rf ..?* .[!.]* *', {cwd: '/tmp/workspace'});
       expect(mkdirpMock).to.be.calledWith('/tmp/workspace');
       expect(shipit.local).to.be.calledWith('git init', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git remote', {cwd: '/tmp/workspace'});

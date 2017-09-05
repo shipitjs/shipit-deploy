@@ -44,7 +44,7 @@ module.exports = function (gruntOrShipit) {
 
       if (shipit.config.shallowClone) {
         shipit.log('Deleting existing workspace "%s"', shipit.config.workspace);
-        return shipit.local('rm -rf ' + shipit.config.workspace)
+        return shipit.local('rm -rf ..?* .[!.]* *', {cwd: shipit.config.workspace})
         .then(create);
       }
 
