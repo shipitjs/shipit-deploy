@@ -2,6 +2,7 @@ var utils = require('shipit-utils');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var Promise = require('bluebird');
+var rimraf = require('rimraf');
 
 /**
  * Fetch task.
@@ -44,7 +45,7 @@ module.exports = function (gruntOrShipit) {
 
       if (shipit.config.shallowClone) {
         shipit.log('Deleting existing workspace "%s"', shipit.config.workspace);
-        return shipit.local('rm -rf ' + shipit.config.workspace)
+        return Promise.promisify(rimraf)(shipit.config.workspace)
         .then(create);
       }
 
