@@ -5,6 +5,7 @@ var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var fetchFactory = rewire('../../../../tasks/deploy/fetch');
 var mkdirpMock = require('../../../mocks/mkdirp');
+var rimrafMock = require('../../../mocks/rimraf');
 
 describe('deploy:fetch task', function () {
   var shipit;
@@ -59,7 +60,7 @@ describe('deploy:fetch task', function () {
 
     shipit.start('deploy:fetch', function (err) {
       if (err) return done(err);
-      expect(shipit.local).to.be.calledWith('rm -rf /tmp/workspace');
+      expect(rimrafMock).to.be.calledWith('/tmp/workspace');
       expect(mkdirpMock).to.be.calledWith('/tmp/workspace');
       expect(shipit.local).to.be.calledWith('git init', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git remote', {cwd: '/tmp/workspace'});
