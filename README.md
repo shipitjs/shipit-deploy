@@ -88,6 +88,10 @@ Type: `String`
 
 Git URL of the project repository.
 
+If empty Shipit will try to deploy without pulling the changes.
+
+In edge cases like quick PoC projects without a repository or a living on the edge production patch applying this can be helpful.
+
 ### branch
 
 Type: `String`

@@ -19,6 +19,7 @@ describe('deploy:fetch task', function () {
     fetchFactory(shipit);
 
     fetchFactory.__set__('mkdirp', mkdirpMock);
+    fetchFactory.__set__('rimraf', rimrafMock);
 
     // Shipit config
     shipit.initConfig({
@@ -35,6 +36,7 @@ describe('deploy:fetch task', function () {
 
   afterEach(function () {
     mkdirpMock.reset();
+    rimrafMock.reset();
     shipit.local.restore();
   });
 
@@ -71,6 +73,16 @@ describe('deploy:fetch task', function () {
       expect(shipit.local).to.be.calledWith('git fetch shipit --prune --depth=1 && git fetch shipit --prune "refs/tags/*:refs/tags/*"', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git checkout master', {cwd: '/tmp/workspace'});
       expect(shipit.local).to.be.calledWith('git branch --list master', {cwd: '/tmp/workspace'});
+      done();
+    });
+  });
+  
+  it('should do nothing when reposity url is empty', function (done) {
+    delete shipit.config.repositoryUrl;
+    
+    shipit.start('deploy:fetch', function (err) {
+      if (err) return done(err);
+      expect(mkdirpMock).callCount(0);
       done();
     });
   });
