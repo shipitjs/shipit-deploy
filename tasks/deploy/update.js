@@ -119,10 +119,6 @@ module.exports = function (gruntOrShipit) {
      */
 
     function setCurrentRevision() {
-      if (!shipit.config.repositoryUrl) {
-        shipit.log('Skipping set current revision as not repository url was set.');
-        return;
-      }
       shipit.log('Setting current revision and creating revision file.');
 
       return shipit.local('git rev-parse ' + shipit.config.branch, {cwd: shipit.config.workspace}).then(function(response) {

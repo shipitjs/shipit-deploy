@@ -20,7 +20,6 @@ var createShipitInstance = function (conf) {
   shipit.initConfig({
     test: _.merge({
       workspace: '/tmp/workspace',
-      repositoryUrl: 'git://website.com/user/repo',
       deployTo: '/remote/deploy'
     }, conf)
   });
@@ -252,16 +251,6 @@ describe('deploy:update task', function () {
           expect(revision).to.equal('9d63d434a921f496c12854a53cef8d293e2b4756');
           done();
         });
-      });
-    });
-  
-    it('should not set revision if no repository url is present', function (done) {
-      delete shipit.config.repositoryUrl;
-      
-      shipit.start('deploy:update', function (err) {
-        if (err) return done(err);
-        expect(shipit.currentRevision).to.equal(undefined);
-        done();
       });
     });
 

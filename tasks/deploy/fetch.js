@@ -16,11 +16,6 @@ module.exports = function (gruntOrShipit) {
 
   function task() {
     var shipit = utils.getShipit(gruntOrShipit);
-  
-    if (!shipit.config.repositoryUrl) {
-      shipit.log('Skipping fetching as no repository url was set.');
-      return;
-    }
 
     return createWorkspace()
     .then(initRepository)
