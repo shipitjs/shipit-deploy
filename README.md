@@ -159,6 +159,12 @@ Type: `String`
 
 Parameter to pass to `cp` to copy the previous release. Non NTFS filesystems support `-r`. Default: `-a`
 
+### skipServerSyncCheck
+
+Type: `Boolean`
+
+Skip validation that remote servers are synced.
+
 ## Variables
 
 Several variables are attached during the deploy and the rollback process:
